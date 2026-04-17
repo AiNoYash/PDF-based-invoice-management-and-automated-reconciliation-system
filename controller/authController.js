@@ -4,10 +4,10 @@ const jwt = require('jsonwebtoken');
 
 const register = async (req, res) => {
     try {
-        const { username, email, password, phone } = req.body;
+        const { email, password } = req.body;
 
-        if (!email || !password || !username || !phone) {
-            return res.status(400).json({ message: 'All fields are required' });
+        if (!email || !password) {
+            return res.status(400).json({ message: 'Email and password are required' });
         }
 
         const existingUser = await UserModel.findByEmail(email);
@@ -18,7 +18,7 @@ const register = async (req, res) => {
         const salt = await bcrypt.genSalt(10);
         const password_hash = await bcrypt.hash(password, salt);
 
-        const newUserId = await UserModel.create({ username, email, password: password_hash, phone });
+        const newUserId = await UserModel.create({ email, password_hash });
         
         res.status(201).json({ 
             message: 'User registered successfully', 
@@ -43,7 +43,7 @@ const login = async (req, res) => {
             return res.status(400).json({ message: 'Invalid credentials' });
         }
 
-        const isMatch = await bcrypt.compare(password, user.password);
+        const isMatch = await bcrypt.compare(password, user.password_hash || '');
         if (!isMatch) {
             return res.status(400).json({ message: 'Invalid credentials' });
         }

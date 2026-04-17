@@ -12,27 +12,12 @@ class UserModel {
     }
 
     static async create(userData) {
-        const { username, email, password, phone } = userData;
+        const { email, password_hash } = userData;
         const [result] = await db.execute(
-            'INSERT INTO users (username, email, password, phone) VALUES (?, ?, ?, ?)',
-            [username, email, password, phone]
+            'INSERT INTO users (email, password_hash) VALUES (?, ?)',
+            [email, password_hash]
         );
         return result.insertId;
-    }
-
-    static async createTable() {
-        const query = `
-            CREATE TABLE IF NOT EXISTS users (
-                id INT AUTO_INCREMENT PRIMARY KEY,
-                username VARCHAR(100) NOT NULL,
-                email VARCHAR(191) UNIQUE NOT NULL,
-                password VARCHAR(255) NOT NULL, 
-                phone VARCHAR(30) NOT NULL,
-                address TEXT,
-                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-            )
-        `;
-        await db.execute(query);
     }
 }
 

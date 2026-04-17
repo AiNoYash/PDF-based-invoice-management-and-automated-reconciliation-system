@@ -1,10 +1,12 @@
-require('dotenv').config();
+require('dotenv').config({ override: true });
 const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');
 
 const authRoute = require('./routes/authRoute');
 const UserModel = require('./model/userModel');
+const initSchema = require('./config/initSchema');
+const appRoute = require('./routes/appRoute');
 
 const app = express();
 
@@ -15,6 +17,7 @@ app.use(morgan('dev'));
 
 // Routes
 app.use('/api/v1/auth', authRoute);
+app.use('/api/v1', appRoute);
 
 // Basic health check route
 app.get('/', (req, res) => {
@@ -33,7 +36,7 @@ const PORT = process.env.PORT || 8005;
 
 const startServer = async () => {
     try {
-        await UserModel.createTable(); // Ensure the table exists on startup
+        await initSchema();
         console.log("Database initialized successfully.");
         
         app.listen(PORT, () => {
