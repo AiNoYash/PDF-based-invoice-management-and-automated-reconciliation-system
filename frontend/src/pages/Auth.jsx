@@ -23,7 +23,11 @@ function Auth() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    setIsLogin(mode !== 'signup');
+    // ? If there is no mode then we manually set it to login
+    if (!mode)
+      setSearchParams({ mode: "login" });
+    else
+      setIsLogin(mode !== 'signup');
   }, [mode]);
 
 
@@ -36,8 +40,8 @@ function Auth() {
     const endpoint = isLogin ? '/api/v1/auth/login' : '/api/v1/auth/register';
 
     try {
-      // Assuming backend runs on 8005 locally for dev
-      const response = await fetch(`http://localhost:5000${endpoint}`, {
+      // ! Hard coded backend port
+      const response = await fetch(`http://localhost:8085${endpoint}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(isLogin ? { email, password } : { username, email, password })
@@ -56,8 +60,10 @@ function Auth() {
         setTimeout(() => {
           navigate('/dashboard'); // Route to actual dashboard
         }, 1000);
+
       } else {
         // Success Registration
+
         setSuccess('Registration successful! Please log in.');
         setTimeout(() => {
           setIsLogin(true); // Switch view to login directly
@@ -137,7 +143,7 @@ function Auth() {
           <span onClick={() => {
             const newMode = isLogin ? 'signup' : 'login';
             setSearchParams({ mode: newMode });
-            
+
             setError(null);
             setSuccess(null);
           }}>

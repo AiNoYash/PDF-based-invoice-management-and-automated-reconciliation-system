@@ -1,18 +1,25 @@
 const db = require('./db');
+const fs = require('fs');
+const path = require('path');
+
 
 const initSchema = async () => {
     const pool = await db.getPool();
-    
-    const createUsersTable = `
-        CREATE TABLE IF NOT EXISTS users (
-            id INT AUTO_INCREMENT PRIMARY KEY,
-            email VARCHAR(255) NOT NULL UNIQUE,
-            password_hash VARCHAR(255) NOT NULL,
-            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-        )
-    `;
 
-    await pool.query(createUsersTable);
+    const sqlFilePath = path.join(__dirname, 'schema.sql');
+    const schemaSql = fs.readFileSync(sqlFilePath, 'utf8');
+
+    // Split into individual queries and remove empty strings
+    const queries = schemaSql
+        .split(';')
+        .map(query => query.trim())
+        .filter(query => query.length > 0);
+
+    // Execute each query sequentially
+    for (const query of queries) {
+        await pool.query(query);
+    }
+
 };
 
 module.exports = initSchema;
