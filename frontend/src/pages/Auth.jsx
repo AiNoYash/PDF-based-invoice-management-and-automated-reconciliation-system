@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, Link, useSearchParams } from 'react-router-dom';
 import './Auth.css';
 
 const BarChartIcon = () => (
@@ -7,17 +7,25 @@ const BarChartIcon = () => (
 );
 
 function Auth() {
-  const [isLogin, setIsLogin] = useState(true);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const mode = searchParams.get('mode');
+
+  const [isLogin, setIsLogin] = useState(mode !== 'signup');
+
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [phone, setPhone] = useState('');
-  
+
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-  
+
   const navigate = useNavigate();
+
+  useEffect(() => {
+    setIsLogin(mode !== 'signup');
+  }, [mode]);
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -26,13 +34,13 @@ function Auth() {
     setIsLoading(true);
 
     const endpoint = isLogin ? '/api/v1/auth/login' : '/api/v1/auth/register';
-    
+
     try {
       // Assuming backend runs on 8005 locally for dev
       const response = await fetch(`http://localhost:5000${endpoint}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(isLogin ? { email, password } : { username, email, password, phone })
+        body: JSON.stringify(isLogin ? { email, password } : { username, email, password })
       });
 
       const data = await response.json();
@@ -85,52 +93,40 @@ function Auth() {
         <form className="auth-form" onSubmit={handleSubmit}>
           {!isLogin && (
             <div className="form-group">
-              <label>Business Name / Username</label>
-              <input 
-                type="text" 
-                placeholder="Acme Corp" 
+              <label>Username</label>
+              <input
+                type="text"
+                placeholder="Enter Username"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 required={!isLogin}
               />
             </div>
           )}
-          
+
           <div className="form-group">
             <label>Email Address</label>
-            <input 
-              type="email" 
-              placeholder="name@company.com" 
+            <input
+              type="email"
+              placeholder="Enter Email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              required 
+              required
             />
           </div>
-          
-          {!isLogin && (
-            <div className="form-group">
-              <label>Phone Number</label>
-              <input 
-                type="text" 
-                placeholder="+1 555 123 4567" 
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
-                required={!isLogin}
-              />
-            </div>
-          )}
+
           <div className="form-group">
             <label>Password</label>
-            <input 
-              type="password" 
-              placeholder="••••••••" 
+            <input
+              type="password"
+              placeholder="••••••••"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              required 
+              required
               minLength="6"
             />
           </div>
-          
+
           <button type="submit" className="btn-auth-submit" disabled={isLoading}>
             {isLoading ? 'Processing...' : isLogin ? 'Sign In' : 'Sign Up'}
           </button>
@@ -139,7 +135,9 @@ function Auth() {
         <div className="auth-toggle">
           {isLogin ? "Don't have an account?" : "Already have an account?"}
           <span onClick={() => {
-            setIsLogin(!isLogin);
+            const newMode = isLogin ? 'signup' : 'login';
+            setSearchParams({ mode: newMode });
+            
             setError(null);
             setSuccess(null);
           }}>

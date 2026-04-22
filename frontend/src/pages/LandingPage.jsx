@@ -1,5 +1,6 @@
 import React from 'react';
 import '../App.css';
+import './LandingPage.css';
 
 // SVGs
 const BarChartIcon = () => (
@@ -41,8 +42,8 @@ function LandingPage() {
           <Link to="/dashboard" className="nav-link">Dashboard</Link>
         </div>
         <div className="nav-right">
-          <Link to="/auth"><button className="btn-login">Log In</button></Link>
-          <Link to="/dashboard">
+          <Link to="/auth?mode=login"><button className="btn-login">Log In</button></Link>
+          <Link to="/auth?mode=signup">
             <button className="btn-primary">Get Started</button>
           </Link>
         </div>
