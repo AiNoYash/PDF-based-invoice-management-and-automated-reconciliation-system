@@ -27,14 +27,14 @@ import { Link } from 'react-router-dom';
 function LandingPage() {
   return (
     <div className="landing-page">
-      {/* Navbar */}
+
       <nav className="navbar">
-        <div className="brand">
+        <Link to={"/"} className="brand">
           <div className="brand-icon-wrapper">
             <BarChartIcon />
           </div>
           ReconFlow
-        </div>
+        </Link>
         <div className="nav-center">
           <a href="#features" className="nav-link">Features</a>
           <a href="#how-it-works" className="nav-link">How It Works</a>
@@ -48,138 +48,6 @@ function LandingPage() {
         </div>
       </nav>
 
-      {/* Hero Content */}
-      <section className="hero">
-
-        {/* Left Side: Content */}
-        <div className="hero-content">
-          <div className="hero-badge">
-            <div className="hero-badge-dot"></div> Automate Your Financial Reconciliation
-          </div>
-
-          <h1 className="hero-title">
-            Smart Invoice Processing for <span className="text-green">Growing Businesses</span>
-          </h1>
-
-          <p className="hero-subtitle">
-            Extract invoice data automatically, match with bank statements instantly, and reduce manual reconciliation effort by up to 90%. Built for SMEs who value accuracy and efficiency.
-          </p>
-
-          <div className="hero-cta">
-            <Link to="/dashboard">
-              <button className="btn-primary">
-                Get Started Free <ArrowRightIcon />
-              </button>
-            </Link>
-            <button className="btn-secondary">Watch Demo</button>
-          </div>
-
-          <div className="hero-trust">
-            <div className="trust-item">
-              <CheckCircleIcon /> No credit card required
-            </div>
-            <div className="trust-item">
-              <CheckCircleIcon /> Free 14-day trial
-            </div>
-          </div>
-        </div>
-
-        {/* Right Side: Visual Mockup */}
-        <div className="hero-mockup-wrapper">
-
-          {/* Floating Bank Sync Toast */}
-          <div className="floating-toast">
-            <div className="toast-icon">
-              <CreditCardIcon />
-            </div>
-            <div className="toast-details">
-              <h4>Bank Synced</h4>
-              <p>2 min ago</p>
-            </div>
-          </div>
-
-          {/* Main Card */}
-          <div className="mockup-card">
-            <div className="window-controls">
-              <div className="control-dot dot-red"></div>
-              <div className="control-dot dot-yellow"></div>
-              <div className="control-dot dot-green"></div>
-            </div>
-
-            <div className="mockup-header">
-              <h3>Reconciliation Overview</h3>
-              <p>April 2026</p>
-            </div>
-
-            <div className="mockup-stats-grid">
-              <div className="mini-stat-card stat-matched">
-                <div className="m-val">847</div>
-                <div className="m-label">Matched</div>
-              </div>
-              <div className="mini-stat-card stat-partial">
-                <div className="m-val">23</div>
-                <div className="m-label">Partial</div>
-              </div>
-              <div className="mini-stat-card stat-unmatched">
-                <div className="m-val">12</div>
-                <div className="m-label">Unmatched</div>
-              </div>
-            </div>
-
-            <div className="mockup-list">
-              <div className="mockup-list-item">
-                <div className="item-left">
-                  <div className="item-icon">
-                    <FileIcon />
-                  </div>
-                  <div className="item-details">
-                    <h4>Tech Solutions Ltd</h4>
-                    <p>Invoice #INV-2024000</p>
-                  </div>
-                </div>
-                <div className="item-right">
-                  <div className="item-amount">$4,250.00</div>
-                  <div className="item-status">Matched</div>
-                </div>
-              </div>
-
-              <div className="mockup-list-item">
-                <div className="item-left">
-                  <div className="item-icon">
-                    <FileIcon />
-                  </div>
-                  <div className="item-details">
-                    <h4>Office Supplies Co</h4>
-                    <p>Invoice #INV-2024001</p>
-                  </div>
-                </div>
-                <div className="item-right">
-                  <div className="item-amount">$892.50</div>
-                  <div className="item-status">Matched</div>
-                </div>
-              </div>
-
-              <div className="mockup-list-item">
-                <div className="item-left">
-                  <div className="item-icon">
-                    <FileIcon />
-                  </div>
-                  <div className="item-details">
-                    <h4>Cloud Services Inc</h4>
-                    <p>Invoice #INV-2024002</p>
-                  </div>
-                </div>
-                <div className="item-right">
-                  <div className="item-amount">$1,500.00</div>
-                  <div className="item-status">Partial Match</div>
-                </div>
-              </div>
-            </div>
-
-          </div>
-        </div>
-
-      </section>
     </div>
   );
 }

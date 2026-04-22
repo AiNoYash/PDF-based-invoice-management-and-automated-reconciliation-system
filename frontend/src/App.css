@@ -24,11 +24,7 @@
   --stat-lightgreen-bg: #f0fdf4;
 }
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
+
 
 body {
   background-color: var(--bg-color);
@@ -36,24 +32,6 @@ body {
   font-family: 'Inter', sans-serif;
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
-}
-
-a {
-  text-decoration: none;
-  color: inherit;
-}
-
-/* Animations */
-@keyframes floatY {
-  0% { transform: translateY(0px); }
-  50% { transform: translateY(-8px); }
-  100% { transform: translateY(0px); }
-}
-
-@keyframes floatX {
-  0% { transform: translateX(0px); }
-  50% { transform: translateX(-5px); }
-  100% { transform: translateX(0px); }
 }
 
 /* Navbar */

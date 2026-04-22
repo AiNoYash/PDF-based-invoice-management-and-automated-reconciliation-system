@@ -1,18 +1,4 @@
-:root {
-  --font-family: 'Inter', sans-serif;
-  --bg-color: #f8fafc;
-  --white: #ffffff;
-  --text-main: #0f172a;
-  --text-muted: #64748b;
-  --primary-btn: #1e293b;
-  --primary-btn-hover: #334155;
-  --border-color: #e2e8f0;
-  --green: #10b981;
-  --yellow: #f59e0b;
-  --red: #ef4444;
-  --blue: #3b82f6;
-  --sidebar-active: #f1f5f9;
-}
+
 
 /* 1. Intuitive box-sizing model */
 *, *::before, *::after {
