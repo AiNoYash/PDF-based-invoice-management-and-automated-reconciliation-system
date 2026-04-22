@@ -3,8 +3,8 @@ const mysql = require('mysql2/promise');
 const host = process.env.MYSQL_HOST || 'localhost';
 const port = Number(process.env.MYSQL_PORT) || 3306;
 const user = process.env.MYSQL_USER || 'root';
-const password = process.env.MYSQL_PASSWORD || '';
-const database = process.env.MYSQL_DATABASE || 'reconciliation_db';
+const password = process.env.MYSQL_PASSWORD || 'YasH@12!';
+const database = process.env.MYSQL_DATABASE || 'dbms_final_proj';
 
 let poolPromise;
 

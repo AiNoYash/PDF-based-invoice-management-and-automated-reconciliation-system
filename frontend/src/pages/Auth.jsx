@@ -8,15 +8,16 @@ const BarChartIcon = () => (
 
 function Auth() {
   const [isLogin, setIsLogin] = useState(true);
+  const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [phone, setPhone] = useState('');
   
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   
   const navigate = useNavigate();
-  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8085';
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -27,10 +28,11 @@ function Auth() {
     const endpoint = isLogin ? '/api/v1/auth/login' : '/api/v1/auth/register';
     
     try {
-      const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+      // Assuming backend runs on 8005 locally for dev
+      const response = await fetch(`http://localhost:5000${endpoint}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password })
+        body: JSON.stringify(isLogin ? { email, password } : { username, email, password, phone })
       });
 
       const data = await response.json();
@@ -81,6 +83,19 @@ function Auth() {
         {success && <div className="success-message">{success}</div>}
 
         <form className="auth-form" onSubmit={handleSubmit}>
+          {!isLogin && (
+            <div className="form-group">
+              <label>Business Name / Username</label>
+              <input 
+                type="text" 
+                placeholder="Acme Corp" 
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                required={!isLogin}
+              />
+            </div>
+          )}
+          
           <div className="form-group">
             <label>Email Address</label>
             <input 
@@ -91,6 +106,19 @@ function Auth() {
               required 
             />
           </div>
+          
+          {!isLogin && (
+            <div className="form-group">
+              <label>Phone Number</label>
+              <input 
+                type="text" 
+                placeholder="+1 555 123 4567" 
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                required={!isLogin}
+              />
+            </div>
+          )}
           <div className="form-group">
             <label>Password</label>
             <input 

@@ -25,18 +25,8 @@ const ArrowRightIcon = () => (
 import { Link } from 'react-router-dom';
 
 function LandingPage() {
-  const handleSpotlightMove = (event) => {
-    const rect = event.currentTarget.getBoundingClientRect();
-    const x = event.clientX - rect.left;
-    const y = event.clientY - rect.top;
-    event.currentTarget.style.setProperty('--mx', `${x}px`);
-    event.currentTarget.style.setProperty('--my', `${y}px`);
-  };
-
   return (
     <div className="landing-page">
-      <div className="landing-orb orb-left" />
-      <div className="landing-orb orb-right" />
       {/* Navbar */}
       <nav className="navbar">
         <div className="brand">
@@ -47,13 +37,12 @@ function LandingPage() {
         </div>
         <div className="nav-center">
           <a href="#features" className="nav-link">Features</a>
-          <a href="#how" className="nav-link">How It Works</a>
-          <Link to="/auth" className="nav-link">Dashboard</Link>
-          <a href="#pricing" className="nav-link">Pricing</a>
+          <a href="#how-it-works" className="nav-link">How It Works</a>
+          <Link to="/dashboard" className="nav-link">Dashboard</Link>
         </div>
         <div className="nav-right">
           <Link to="/auth"><button className="btn-login">Log In</button></Link>
-          <Link to="/auth">
+          <Link to="/dashboard">
             <button className="btn-primary">Get Started</button>
           </Link>
         </div>
@@ -61,45 +50,30 @@ function LandingPage() {
 
       {/* Hero Content */}
       <section className="hero">
-        
+
         {/* Left Side: Content */}
         <div className="hero-content">
           <div className="hero-badge">
             <div className="hero-badge-dot"></div> Automate Your Financial Reconciliation
           </div>
-          
+
           <h1 className="hero-title">
             Smart Invoice Processing for <span className="text-green">Growing Businesses</span>
           </h1>
-          
+
           <p className="hero-subtitle">
             Extract invoice data automatically, match with bank statements instantly, and reduce manual reconciliation effort by up to 90%. Built for SMEs who value accuracy and efficiency.
           </p>
-          
+
           <div className="hero-cta">
-            <Link to="/auth">
+            <Link to="/dashboard">
               <button className="btn-primary">
                 Get Started Free <ArrowRightIcon />
               </button>
             </Link>
-            <a href="#features" className="btn-secondary">Explore Features</a>
+            <button className="btn-secondary">Watch Demo</button>
           </div>
 
-          <div className="hero-kpi-row">
-            <div className="hero-kpi spotlight-card" onMouseMove={handleSpotlightMove}>
-              <h4>99.2%</h4>
-              <p>Data extraction accuracy</p>
-            </div>
-            <div className="hero-kpi spotlight-card" onMouseMove={handleSpotlightMove}>
-              <h4>2.4x</h4>
-              <p>Faster month-end closing</p>
-            </div>
-            <div className="hero-kpi spotlight-card" onMouseMove={handleSpotlightMove}>
-              <h4>24/7</h4>
-              <p>Live reconciliation visibility</p>
-            </div>
-          </div>
-          
           <div className="hero-trust">
             <div className="trust-item">
               <CheckCircleIcon /> No credit card required
@@ -112,9 +86,9 @@ function LandingPage() {
 
         {/* Right Side: Visual Mockup */}
         <div className="hero-mockup-wrapper">
-          
+
           {/* Floating Bank Sync Toast */}
-          <div className="floating-toast interactive-float">
+          <div className="floating-toast">
             <div className="toast-icon">
               <CreditCardIcon />
             </div>
@@ -125,7 +99,7 @@ function LandingPage() {
           </div>
 
           {/* Main Card */}
-          <div className="mockup-card interactive-tilt spotlight-card" onMouseMove={handleSpotlightMove}>
+          <div className="mockup-card">
             <div className="window-controls">
               <div className="control-dot dot-red"></div>
               <div className="control-dot dot-yellow"></div>
@@ -153,7 +127,7 @@ function LandingPage() {
             </div>
 
             <div className="mockup-list">
-              <div className="mockup-list-item interactive-card">
+              <div className="mockup-list-item">
                 <div className="item-left">
                   <div className="item-icon">
                     <FileIcon />
@@ -169,7 +143,7 @@ function LandingPage() {
                 </div>
               </div>
 
-              <div className="mockup-list-item interactive-card">
+              <div className="mockup-list-item">
                 <div className="item-left">
                   <div className="item-icon">
                     <FileIcon />
@@ -185,7 +159,7 @@ function LandingPage() {
                 </div>
               </div>
 
-              <div className="mockup-list-item interactive-card">
+              <div className="mockup-list-item">
                 <div className="item-left">
                   <div className="item-icon">
                     <FileIcon />
@@ -201,40 +175,10 @@ function LandingPage() {
                 </div>
               </div>
             </div>
-            
+
           </div>
         </div>
 
-      </section>
-
-      <section id="features" className="feature-strip">
-        <div className="feature-pill spotlight-card" onMouseMove={handleSpotlightMove}>AI invoice understanding</div>
-        <div className="feature-pill spotlight-card" onMouseMove={handleSpotlightMove}>Automated bank statement matching</div>
-        <div className="feature-pill spotlight-card" onMouseMove={handleSpotlightMove}>Reconciliation dashboard analytics</div>
-        <div className="feature-pill spotlight-card" onMouseMove={handleSpotlightMove}>SME-focused workflow design</div>
-      </section>
-
-      <section id="how" className="landing-section-block">
-        <h2>How It Works</h2>
-        <p>
-          Register your account, add your business and vendors, upload invoice PDFs and statement CSVs,
-          then review matched, partially matched, and pending payments in one dashboard.
-        </p>
-        <div className="section-cta-row">
-          <Link to="/auth"><button className="btn-primary">Start Setup</button></Link>
-          <a href="#pricing" className="btn-secondary">View Plans</a>
-        </div>
-      </section>
-
-      <section id="pricing" className="landing-section-block">
-        <h2>Pricing</h2>
-        <p>
-          Begin free to evaluate reconciliation workflows. Upgrade later as your invoice volume grows.
-        </p>
-        <div className="section-cta-row">
-          <Link to="/auth"><button className="btn-primary">Get Started Free</button></Link>
-          <a href="#features" className="btn-secondary">Compare Features</a>
-        </div>
       </section>
     </div>
   );
