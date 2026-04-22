@@ -12,10 +12,10 @@ class UserModel {
     }
 
     static async create(userData) {
-        const { email, password_hash } = userData;
+        const { username, email, password_hash } = userData;
         const [result] = await db.execute(
-            'INSERT INTO users (email, password_hash) VALUES (?, ?)',
-            [email, password_hash]
+            'INSERT INTO users (username, email, password_hash) VALUES (?, ?, ?)',
+            [username, email, password_hash]
         );
         return result.insertId;
     }
