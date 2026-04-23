@@ -7,22 +7,20 @@ const useAuthStore = create(
       user: null, // ? user is { id, email, username }
       token: null,
       isAuthenticated: false,
-      lastActiveBusinessId: null,
+
 
       // Call this after a successful login API request
       login: (user, token) => set({
         user,
         token,
-        isAuthenticated: true,
-        lastActiveBusinessId: user.lastActiveBusinessId
+        isAuthenticated: true
       }),
 
       // Call this when the user clicks logout or token expires
       logout: () => set({
         user: null,
         token: null,
-        isAuthenticated: false,
-        lastActiveBusinessId: null
+        isAuthenticated: false
       }),
 
 
@@ -52,9 +50,37 @@ const useAuthStore = create(
         }
       },
 
+      setLastActiveBusinessId: async (businessId) => {
+
+        set((state) => ({
+          user: state.user ? { ...state.user, lastActiveBusinessId: businessId } : null
+        }));
+        
+        const token = get().token;
+        if (!token) return;
+
+        try {
+          const response = await fetch('http://localhost:8085/api/v1/auth/active-business', {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({ businessId })
+          });
+
+          if (!response.ok) {
+            console.error("Failed to sync lastActiveBusinessId with database");
+          }
+        } catch (error) {
+          console.error("API error syncing lastActiveBusinessId:", error);
+        }
+      },
+
+
       // Optional: Update specific user fields later (e.g., profile update)
       updateUser: (userData) => set((state) => ({
-        user: { ...userData }
+        user: { ...state.user, ...userData }
       })),
     }),
     {

@@ -18,7 +18,7 @@ const register = async (req, res) => {
         const salt = await bcrypt.genSalt(10);
         const password_hash = await bcrypt.hash(password, salt);
 
-        const newUserId = await UserModel.create({ username, email, password_hash });
+        const newUserId = await UserModel.create({ username, email, password_hash }); // ? Last active business id is ovb going to be null so doing that inside of the function
 
         res.status(201).json({
             message: 'User registered successfully',
@@ -59,7 +59,7 @@ const login = async (req, res) => {
         res.status(200).json({
             message: 'Login successful',
             token,
-            user: { id: user.id, email: user.email, username: user.username }
+            user: { id: user.id, email: user.email, username: user.username, lastActiveBusinessId: user.lastActiveBusinessId }
         });
     } catch (error) {
         console.error(error);

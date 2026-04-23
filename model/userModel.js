@@ -6,16 +6,24 @@ class UserModel {
         return rows[0];
     }
 
+    static async updateLastActiveBusiness(userId, businessId) {
+        const [result] = await db.execute(
+            'UPDATE users SET last_active_business_id = ? WHERE id = ?',
+            [businessId, userId]
+        );
+        return result.affectedRows;
+    }
+
     static async findById(id) {
-        const [rows] = await db.execute('SELECT id, email, created_at FROM users WHERE id = ?', [id]);
+        const [rows] = await db.execute('SELECT * FROM users WHERE id = ?', [id]);
         return rows[0];
     }
 
     static async create(userData) {
         const { username, email, password_hash } = userData;
         const [result] = await db.execute(
-            'INSERT INTO users (username, email, password_hash) VALUES (?, ?, ?)',
-            [username, email, password_hash]
+            'INSERT INTO users (username, email, password_hash, last_active_business_id) VALUES (?, ?, ?, ?)',
+            [username, email, password_hash, null]
         );
         return result.insertId;
     }
