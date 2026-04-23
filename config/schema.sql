@@ -121,8 +121,8 @@ CREATE TABLE IF NOT EXISTS reconciliation_matches (
     FOREIGN KEY (bank_statement_record_id) REFERENCES bank_statement_records(id) ON DELETE SET NULL
 );
 
--- ALTER TABLE users 
--- ADD COLUMN last_active_business_id INT,
--- ADD FOREIGN KEY (last_active_business_id) REFERENCES businesses(id) ON DELETE SET NULL;
+ALTER TABLE users 
+ADD COLUMN last_active_business_id INT,
+ADD FOREIGN KEY (last_active_business_id) REFERENCES businesses(id) ON DELETE SET NULL;
 
 -- ? Need to run above lines only once PLEASE   

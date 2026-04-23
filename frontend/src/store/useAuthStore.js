@@ -50,10 +50,16 @@ const useAuthStore = create(
         }
       },
 
-      setLastActiveBusinessId: async (businessId) => {
+      setLastActiveBusinessId: async (businessId, businessName = null) => {
 
         set((state) => ({
-          user: state.user ? { ...state.user, lastActiveBusinessId: businessId } : null
+          user: state.user
+            ? {
+                ...state.user,
+                lastActiveBusinessId: businessId,
+                lastActiveBusinessName: businessName
+              }
+            : null
         }));
         
         const token = get().token;
