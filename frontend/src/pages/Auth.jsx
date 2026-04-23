@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate, Link, useSearchParams } from 'react-router-dom';
 import useAuthStore from '../store/useAuthStore';
 
@@ -10,7 +10,7 @@ const BarChartIcon = () => (
 
 function Auth() {
 
-  const isLoggedIn = useAuthStore((state) => state.isAuthenticated);
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
   const login = useAuthStore((state) => state.login);
 
 
@@ -29,7 +29,11 @@ function Auth() {
 
   const navigate = useNavigate();
 
-
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate('/dashboard', { replace: true }); // ? The user should not be able to come to this page even if they click undo button 
+    }
+  }, [isAuthenticated, navigate]);
 
   useEffect(() => {
     // ? If there is no mode then we manually set it to login
