@@ -57,6 +57,7 @@ function Auth() {
         // Success Login
         localStorage.setItem('token', data.token); // Store JWT securely
         setSuccess('Login successful! Redirecting...');
+        
         setTimeout(() => {
           navigate('/dashboard'); // Route to actual dashboard
         }, 1000);

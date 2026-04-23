@@ -1,16 +1,11 @@
 # PDF-Based Invoice Management And Automated Reconciliation System
 
-## Overview
+## Plugins
 
-This project automates invoice processing and financial reconciliation for SMEs using text-based PDF invoices and bank statements in CSV format.
+VS Code Extensions
 
-Main flow:
-
-1. Upload text-based invoice PDF.
-2. Extract invoice fields using PDF text extraction and parsing logic.
-3. Upload bank statement CSV.
-4. Run reconciliation using amount/date/vendor similarity scoring.
-5. View dashboard summary for matched, partial, and unmatched records.
+REST Client by Huachao Mao 
+Better Comments by Aaron Bond
 
 
 ## Tech Stack

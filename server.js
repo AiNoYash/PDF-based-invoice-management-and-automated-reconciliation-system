@@ -16,7 +16,7 @@ app.use(express.json());
 app.use(morgan('dev'));
 
 // Basic health check route
-app.get('/', (req, res) => {
+app.get('/lol', (req, res) => {
     res.status(200).json({ message: 'API is running cleanly' });
 });
 
