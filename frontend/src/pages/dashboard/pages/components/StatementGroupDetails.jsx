@@ -4,15 +4,14 @@ import { useState } from "react";
 
 const initialMockTransactions = {
     1: [
-        { id: 't1', transactionId: 'TXN-001', reconciled: 'Yes', date: '2026-04-10', debit: '1500.00', credit: '', description: 'Client Payment - Acme Corp', fileName: 'inv-acme-01.pdf' },
-        { id: 't2', transactionId: 'TXN-002', reconciled: 'No', date: '2026-04-11', debit: '', credit: '250.00', description: 'Office Supplies', fileName: 'receipt-staples.pdf' },
+        { id: 't1', transactionId: 'TXN-001', reconciled: 'Yes', date: '2026-04-10', debit: '1500.00', credit: '', description: 'Client Payment - Acme Corp', fileName: 'stmt-01.pdf' },
+        { id: 't2', transactionId: 'TXN-002', reconciled: 'No', date: '2026-04-11', debit: '', credit: '250.00', description: 'Office Supplies', fileName: 'stmt-02.pdf' },
     ],
     2: [
         { id: 't3', transactionId: 'TXN-003', reconciled: 'Yes', date: '2026-03-15', debit: '5000.00', credit: '', description: 'Q1 Ad Spend Allocation', fileName: null },
     ],
     3: []
 };
-
 
 export function StatementGroupDetails() {
     const { id } = useParams();
@@ -26,7 +25,7 @@ export function StatementGroupDetails() {
 
     const handleAddRow = () => {
         const newRow = {
-            id: Date.now().toString(), // Generate a unique ID for the new row
+            id: Date.now().toString(),
             transactionId: '',
             reconciled: 'No',
             date: '',
@@ -38,12 +37,11 @@ export function StatementGroupDetails() {
         setTransactions([...transactions, newRow]);
     };
 
-
     return (
         <>
             <div className="transactions-view">
-                <div className="ledger-table-container">
-                    <table className="ledger-table">
+                <div className="statement-table-container">
+                    <table className="statement-table">
                         <thead>
                             <tr>
                                 <th style={{ width: '50px' }}>#</th>
@@ -128,7 +126,6 @@ export function StatementGroupDetails() {
                     </table>
                 </div>
                 <button className="add-row-btn" onClick={handleAddRow}>
-                    {/* <Plus size={18} />  */}
                     Add New Entry
                 </button>
             </div>

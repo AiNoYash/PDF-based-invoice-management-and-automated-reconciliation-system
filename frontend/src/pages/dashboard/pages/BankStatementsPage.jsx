@@ -1,16 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import './BankStatementsPage.css';
-import { Link, useOutletContext } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
+import { useOutletContext, useNavigate } from 'react-router-dom';
 
 import { CreateBankStatementGroupModal } from "./components/CreateBankStatementGroupModal";
 
-
-
-const mockLedgers = [
+const mockBankStatements = [
   {
     id: 1,
-    name: "April Sales Invoices",
+    name: "April Sales Statements",
     bankAccount: "Chase Business **** **** **** 4219",
     month: "April",
     year: "2026",
@@ -19,7 +16,7 @@ const mockLedgers = [
   },
   {
     id: 2,
-    name: "Q1 Marketing Expenses",
+    name: "Q1 Marketing Statements",
     bankAccount: "BoA Checking **** **** **** 8821",
     month: "March",
     year: "2026",
@@ -38,13 +35,17 @@ const mockLedgers = [
 ];
 
 export const BankStatementsPage = () => {
-
   const { showCreateModalOverlay, setShowCreateModalOverlay } = useOutletContext();
   const navigate = useNavigate();
 
   return (
     <>
-      {showCreateModalOverlay && <CreateBankStatementGroupModal isOpen={showCreateModalOverlay} onClose={() => { setShowCreateModalOverlay(false); }} />}
+      {showCreateModalOverlay && (
+        <CreateBankStatementGroupModal 
+          isOpen={showCreateModalOverlay} 
+          onClose={() => setShowCreateModalOverlay(false)} 
+        />
+      )}
 
       <div className="ledger-table-container">
         <table className="ledger-table">
@@ -58,22 +59,18 @@ export const BankStatementsPage = () => {
             </tr>
           </thead>
           <tbody>
-            {mockLedgers.map((ledger) => (
-              <tr key={ledger.id} onClick={()=>{
-                navigate(ledger.id.toString());
-              }}>
-                <td className="cell-name">{ledger.name}</td>
-                <td className="cell-bank">{ledger.bankAccount}</td>
-                <td>{ledger.month} {ledger.year}</td>
-                <td className="cell-entries">{ledger.entries}</td>
-                <td>{ledger.createdAt}</td>
+            {mockBankStatements.map((statement) => (
+              <tr key={statement.id} onClick={() => navigate(statement.id.toString())}>
+                <td className="cell-name">{statement.name}</td>
+                <td className="cell-bank">{statement.bankAccount}</td>
+                <td>{statement.month} {statement.year}</td>
+                <td className="cell-entries">{statement.entries}</td>
+                <td>{statement.createdAt}</td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
-
     </>
   );
 };
-
