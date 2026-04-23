@@ -1,5 +1,7 @@
 import { Link } from "react-router-dom";
 import useAuthStore from "../../store/useAuthStore";
+import { useNavigate } from "react-router-dom";
+
 // SVG Icons
 const BarChartIcon = () => (
     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
@@ -28,6 +30,8 @@ const SettingsIcon = () => (
 export function Sidebar() {
 
     const user = useAuthStore((state) => state.user);
+    const logout = useAuthStore((state) => state.logout);
+    const navigate = useNavigate();
 
     return (
         <aside className="sidebar">
@@ -42,26 +46,29 @@ export function Sidebar() {
                 <Link to="/dashboard" className="nav-item active">
                     <HomeIcon /> Dashboard
                 </Link>
-                <Link to="/#upload" className="nav-item">
-                    <UploadCloudIcon /> Upload Center
-                </Link>
-                <Link to="/#invoices" className="nav-item">
-                    <FileTextIcon /> Invoices
+                <Link to="./upload" className="nav-item">
+                    <UploadCloudIcon /> Ledger Collection
                 </Link>
                 <Link to="/#statements" className="nav-item">
                     <CreditCardIcon /> Bank Statements
                 </Link>
-                <Link to="/#settings" className="nav-item">
-                    <SettingsIcon /> Logout
+                <Link to="./reconciliations" className="nav-item">
+                    <CreditCardIcon /> Reconciliations
                 </Link>
-                <Link to="/#settings" className="nav-item">
+                <Link to="/#settings" className="nav-item" >
                     <SettingsIcon /> Settings
+                </Link>
+                <Link className="nav-item" id="logout-btn" onClick={() => {
+                    logout();
+                    navigate("/");
+                }}>
+                    <SettingsIcon /> Logout
                 </Link>
             </nav>
 
             <div className="sidebar-footer">
                 <div className="user-profile">
-                    <div className="avatar">JS</div>
+                    <div className="avatar">{user.username.charAt(0).toUpperCase()}</div>
                     <div className="user-info">
                         <h4>{user.username}</h4>
                         <p>{user.email}</p>

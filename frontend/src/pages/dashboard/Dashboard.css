@@ -1,9 +1,11 @@
 .dashboard-layout {
   display: flex;
   height: 100vh;
-  background-color: #f9fafb; /* Gray 50 */
+  background-color: #f9fafb;
+  /* Gray 50 */
   font-family: 'Inter', sans-serif;
 }
+
 
 /* Sidebar */
 .sidebar {
@@ -55,9 +57,25 @@
   text-decoration: none;
 }
 
-.nav-item:hover, .nav-item.active {
+.nav-item:hover,
+.nav-item.active {
   background-color: #ecfdf5;
   color: #059669;
+}
+
+/* ? Last is Logout btn and 2nd last is Settings button */
+.nav-item:nth-last-child(2){
+  margin-top: auto;
+}
+
+#logout-btn {
+  background-color: #fdecf3;
+  color: #960513;
+}
+
+#logout-btn:hover {
+  background-color: #fdecf3;
+  color: #960513;
 }
 
 .nav-item svg {
@@ -182,7 +200,7 @@
   padding: 1.25rem;
   border-radius: 20px;
   border: 1px solid #e5e7eb;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
 }
 
 .stat-card-title {
@@ -198,8 +216,13 @@
   color: #111827;
 }
 
-.text-matched { color: #d97706; }
-.text-pending { color: #dc2626; }
+.text-matched {
+  color: #d97706;
+}
+
+.text-pending {
+  color: #dc2626;
+}
 
 /* Main Grid (Upload Shortcuts + Recent Activity) */
 .dashboard-grid {
