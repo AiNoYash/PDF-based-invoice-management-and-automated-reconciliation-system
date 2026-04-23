@@ -31,15 +31,25 @@ function Dashboard() {
           <div className="topbar-left">
             <h2>{titles[currentPage]}</h2>
           </div>
+
           {
-            currentPage === "Dashboard" || currentPage === "LedgerCollection" ?
+            currentPage === "Dashboard" ? null :
               <div className="topbar-right">
                 <Link className="btn-upload-primary">
-                  <UploadCloudIcon /> Create New Ledger
+                  <UploadCloudIcon />
+                  {
+                    currentPage === "LedgerCollection" ?
+                      <>Create New Ledger</> :
+                      currentPage === "BankStatements" ?
+                        <>Create New Statement Group</> :
+                        currentPage === "Reconciliations" ?
+                          <>Create New Reconciliation Group</> :
+                          null
+                  }
                 </Link>
               </div>
-              : null
           }
+          
 
         </header>
 

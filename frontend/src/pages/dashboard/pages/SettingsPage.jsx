@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import './SettingsPage.css'; 
-
-import { useAuthStore } from "./../../../store/useAuthStore";
+import useAuthStore from "./../../../store/useAuthStore";
 
 export function SettingsPage() {
 
@@ -155,10 +154,10 @@ export function SettingsPage() {
                     <>
                         <p>Managing accounts for the currently active business.</p>
                         
-                        <ul className="settings-list">
+                        <ul className="settings-list" style={{ marginBottom: '1.5rem' }}>
                             {activeBusinessBankAccounts.map(acc => (
                                 <li key={acc.id} className="settings-list-item">
-                                    <span>{acc.bank_name} - {acc.account_nickname} (*{acc.account_last_four})</span>
+                                    <span>{acc.bank_name} - {acc.account_nickname} (**** **** **** {acc.account_last_four})</span>
                                     <button onClick={() => handleDeleteBankAccount(acc.id)} className="btn-danger-small">Remove</button>
                                 </li>
                             ))}

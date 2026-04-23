@@ -7,22 +7,23 @@ const useAuthStore = create(
       user: null, // ? user is { id, email, username }
       token: null,
       isAuthenticated: false,
+      lastActiveBusinessId: null,
 
       // Call this after a successful login API request
       login: (user, token) => set({
         user,
         token,
-        isAuthenticated: true
+        isAuthenticated: true,
+        lastActiveBusinessId: user.lastActiveBusinessId
       }),
 
       // Call this when the user clicks logout or token expires
       logout: () => set({
         user: null,
         token: null,
-        isAuthenticated: false
+        isAuthenticated: false,
+        lastActiveBusinessId: null
       }),
-
-
 
 
       checkAuth: async () => {
@@ -50,8 +51,6 @@ const useAuthStore = create(
           console.error("Auth check failed:", error);
         }
       },
-
-
 
       // Optional: Update specific user fields later (e.g., profile update)
       updateUser: (userData) => set((state) => ({
