@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link, useSearchParams } from 'react-router-dom';
+import useAuthStore from '../store/useAuthStore';
+
 import './Auth.css';
 
 const BarChartIcon = () => (
@@ -7,6 +9,11 @@ const BarChartIcon = () => (
 );
 
 function Auth() {
+
+  const isLoggedIn = useAuthStore((state) => state.isAuthenticated);
+  const login = useAuthStore((state) => state.login);
+
+
   const [searchParams, setSearchParams] = useSearchParams();
   const mode = searchParams.get('mode');
 
@@ -21,6 +28,8 @@ function Auth() {
   const [isLoading, setIsLoading] = useState(false);
 
   const navigate = useNavigate();
+
+
 
   useEffect(() => {
     // ? If there is no mode then we manually set it to login
@@ -49,17 +58,20 @@ function Auth() {
 
       const data = await response.json();
 
+      console.log(data);
+
       if (!response.ok) {
         throw new Error(data.message || 'Something went wrong');
       }
 
       if (isLogin) {
         // Success Login
-        localStorage.setItem('token', data.token); // Store JWT securely
+        login(data.user, data.token); // ? This is from zustand and token is being saved in localStorage by default
         setSuccess('Login successful! Redirecting...');
-        
+
+
         setTimeout(() => {
-          navigate('/dashboard'); // Route to actual dashboard
+          navigate('/dashboard'); // ? Takes some time for no reason 
         }, 1000);
 
       } else {
