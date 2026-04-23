@@ -10,6 +10,8 @@ import { LedgerCollectionPage } from './pages/dashboard/pages/LedgerCollectionPa
 import { BankStatementsPage } from './pages/dashboard/pages/BankStatementsPage';
 import { ReconciliationsPage } from './pages/dashboard/pages/ReconciliationsPage';
 import { SettingsPage } from './pages/dashboard/pages/SettingsPage';
+import { LedgerDetails } from './pages/dashboard/pages/components/LedgerDetails';
+
 
 function App() {
 
@@ -31,7 +33,11 @@ function App() {
           <Route path="/dashboard" element={<Dashboard />}>
             <Route index element={<DashboardPage />} />
 
-            <Route path="ledger-collection" element={<LedgerCollectionPage />} />
+            <Route path="ledger-collection"  >
+              <Route index element={<LedgerCollectionPage />} />
+              <Route path=":id" element={<LedgerDetails />} />
+            </Route>
+
             <Route path="bank-statements" element={<BankStatementsPage />} />
             <Route path="reconciliations" element={<ReconciliationsPage />} />
             <Route path="settings" element={<SettingsPage />} />
