@@ -12,6 +12,7 @@ import { ReconciliationsPage } from './pages/dashboard/pages/ReconciliationsPage
 import { SettingsPage } from './pages/dashboard/pages/SettingsPage';
 import { LedgerDetails } from './pages/dashboard/pages/components/LedgerDetails';
 import { StatementGroupDetails } from "./pages/dashboard/pages/components/StatementGroupDetails";
+import { ReconciliationDetails } from './pages/dashboard/pages/components/ReconciliationDetails';
 
 
 function App() {
@@ -44,7 +45,11 @@ function App() {
               <Route path=":id" element={<StatementGroupDetails />} />
             </Route>
 
-            <Route path="reconciliations" element={<ReconciliationsPage />} />
+            <Route path="reconciliations"  >
+              <Route index element={<ReconciliationsPage />} />
+              <Route path=":id" element={<ReconciliationDetails />} />
+            </Route>
+
             <Route path="settings" element={<SettingsPage />} />
           </Route>
         </Route>

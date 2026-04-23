@@ -41,7 +41,7 @@ function Dashboard() {
           </div>
 
           {
-            currentPage === "Dashboard" ? null :
+            currentPage === "Dashboard" || currentPage === "Settings" ? null :
               <div className="topbar-right">
                 <Link className="btn-upload-primary" onClick={() => {
                   setShowCreateModalOverlay(true);
