@@ -7,7 +7,7 @@ const authMiddleware = require('../middleware/authMiddleware');
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, './uploads/');
+    cb(null, './uploads/invoices/');
   },
   filename: function (req, file, cb) {
     const nameWithoutExt = path.parse(file.originalname).name;
