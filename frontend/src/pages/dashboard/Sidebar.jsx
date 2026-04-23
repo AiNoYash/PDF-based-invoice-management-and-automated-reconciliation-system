@@ -87,11 +87,13 @@ const SettingsIcon = () => (
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
 );
 
-export function Sidebar({ currentPage, setCurrentPage }) {
+export function Sidebar() {
 
     const user = useAuthStore((state) => state.user);
     const logout = useAuthStore((state) => state.logout);
     const navigate = useNavigate();
+    const username = user?.username;
+    const avatarLetter = (username?.[0] ?? '?').toUpperCase();
     const activeBusinessLabel = user?.lastActiveBusinessName
         ? `Active Business: ${user.lastActiveBusinessName}`
         : user?.lastActiveBusinessId
@@ -108,24 +110,19 @@ export function Sidebar({ currentPage, setCurrentPage }) {
             </NavLink>
 
             <nav className="sidebar-nav">
-                <NavLink to="/dashboard" end className={`nav-item`}
-                    onClick={() => { setCurrentPage("Dashboard") }}>
+                <NavLink to="/dashboard" end className={`nav-item`}>
                     <HomeIcon /> Dashboard
                 </NavLink>
-                <NavLink to="./ledger-collection" className={`nav-item`}
-                    onClick={() => { setCurrentPage("LedgerCollection") }}>
+                <NavLink to="./ledger-collection" className={`nav-item`}>
                     <LedgerIcon /> Ledger Collection
                 </NavLink>
-                <NavLink to="./bank-statements" className={`nav-item`}
-                    onClick={() => { setCurrentPage("BankStatements") }}>
+                <NavLink to="./bank-statements" className={`nav-item`}>
                     <BankStatementIcon /> Bank Statements
                 </NavLink>
-                <NavLink to="./reconciliations" className={`nav-item`}
-                    onClick={() => { setCurrentPage("Reconciliations") }}>
+                <NavLink to="./reconciliations" className={`nav-item`}>
                     <ReconciliationIcon /> Reconciliations
                 </NavLink>
-                <NavLink to="./settings" className={`nav-item`}
-                    onClick={() => { setCurrentPage("Settings") }} >
+                <NavLink to="./settings" className={`nav-item`}>
                     <SettingsIcon /> Settings
                 </NavLink>
                 <NavLink className="nav-item" id="logout-btn" onClick={() => {
@@ -138,9 +135,9 @@ export function Sidebar({ currentPage, setCurrentPage }) {
 
             <div className="sidebar-footer">
                 <div className="user-profile">
-                    <div className="avatar">{user.username.charAt(0).toUpperCase()}</div>
+                    <div className="avatar">{avatarLetter}</div>
                     <div className="user-info">
-                        <h4>{user.username}</h4>
+                        <h4>{username ?? 'User'}</h4>
                         <p>{activeBusinessLabel}</p>
                     </div>
                 </div>

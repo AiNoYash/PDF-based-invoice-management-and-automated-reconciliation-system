@@ -7,7 +7,7 @@ export function SettingsPage() {
     // const [username, setUsername] = useState('Yash');
     const user = useAuthStore(state => state.user);
     const setLastActiveBusinessId = useAuthStore(state => state.setLastActiveBusinessId);
-    const username = user.username;
+    const username = user?.username ?? 'User';
 
     const [newUsername, setNewUsername] = useState('');
 

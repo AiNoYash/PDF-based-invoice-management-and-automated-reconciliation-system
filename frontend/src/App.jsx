@@ -5,7 +5,7 @@ import Dashboard from './pages/dashboard/Dashboard';
 import Auth from './pages/Auth';
 import ProtectedRoute from './components/ProtectedRoute'; // Import the guard
 import useAuthStore from './store/useAuthStore';
-import { DashboardPage } from './pages/dashboard/pages/DashBoardPage';
+import { DashboardPage } from './pages/dashboard/pages/DashboardPage';
 import { LedgerCollectionPage } from './pages/dashboard/pages/LedgerCollectionPage';
 import { BankStatementsPage } from './pages/dashboard/pages/BankStatementsPage';
 import { ReconciliationsPage } from './pages/dashboard/pages/ReconciliationsPage';
