@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './LedgerCollectionPage.css';
 import { Link, useOutletContext } from 'react-router-dom';
-
+import { useNavigate } from 'react-router-dom';
 
 import { CreateLedgerModal } from "./components/CreateLedgerModal";
 
@@ -40,6 +40,7 @@ const mockLedgers = [
 export const LedgerCollectionPage = () => {
 
   const { showCreateModalOverlay, setShowCreateModalOverlay } = useOutletContext();
+  const navigate = useNavigate();
 
   return (
     <>
@@ -59,7 +60,7 @@ export const LedgerCollectionPage = () => {
           <tbody>
             {mockLedgers.map((ledger) => (
               <tr key={ledger.id} onClick={()=>{
-                
+                navigate(ledger.id.toString());
               }}>
                 <td className="cell-name">{ledger.name}</td>
                 <td className="cell-bank">{ledger.bankAccount}</td>
