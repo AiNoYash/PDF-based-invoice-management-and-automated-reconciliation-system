@@ -6,6 +6,7 @@ export function SettingsPage() {
 
     // const [username, setUsername] = useState('Yash');
     const user = useAuthStore(state => state.user);
+    const setLastActiveBusinessId = useAuthStore(state => state.setLastActiveBusinessId);
     const username = user.username;
 
     const [newUsername, setNewUsername] = useState('');
@@ -15,7 +16,7 @@ export function SettingsPage() {
     ]);
     
     const [newBusinessName, setNewBusinessName] = useState('');
-    const [selectedBusinessId, setSelectedBusinessId] = useState(1);
+    const [selectedBusinessId, setSelectedBusinessId] = useState(user?.lastActiveBusinessId || 1);
 
     const [bankAccounts, setBankAccounts] = useState([
         { id: 1, business_id: 1, bank_name: 'HDFC', account_nickname: 'Main Operations', account_last_four: '1234' }
@@ -38,7 +39,10 @@ export function SettingsPage() {
         if (!newBusinessName) return;
         const newBiz = { id: Date.now(), business_name: newBusinessName };
         setBusinesses([...businesses, newBiz]);
-        if (!selectedBusinessId) setSelectedBusinessId(newBiz.id);
+        if (!selectedBusinessId) {
+            setSelectedBusinessId(newBiz.id);
+            setLastActiveBusinessId(newBiz.id, newBiz.business_name);
+        }
         setNewBusinessName('');
     };
 
@@ -50,7 +54,10 @@ export function SettingsPage() {
             
             // If the deleted business was the active one, fallback to another or null
             if (selectedBusinessId === id) {
-                setSelectedBusinessId(updatedBusinesses.length > 0 ? updatedBusinesses[0].id : null);
+                const nextActiveBusiness = updatedBusinesses.length > 0 ? updatedBusinesses[0] : null;
+                const nextActiveBusinessId = nextActiveBusiness ? nextActiveBusiness.id : null;
+                setSelectedBusinessId(nextActiveBusinessId);
+                setLastActiveBusinessId(nextActiveBusinessId, nextActiveBusiness ? nextActiveBusiness.business_name : null);
             }
             
             // Simulating DB CASCADE DELETE
@@ -66,6 +73,13 @@ export function SettingsPage() {
 
     const handleDeleteBankAccount = (id) => {
         setBankAccounts(bankAccounts.filter(acc => acc.id !== id));
+    };
+
+    const handleActiveBusinessChange = (e) => {
+        const businessId = Number(e.target.value);
+        const selectedBusiness = businesses.find((biz) => biz.id === businessId);
+        setSelectedBusinessId(businessId);
+        setLastActiveBusinessId(businessId, selectedBusiness ? selectedBusiness.business_name : null);
     };
 
     // --- Derived Data ---
@@ -105,7 +119,7 @@ export function SettingsPage() {
                     ) : (
                         <select 
                             value={selectedBusinessId || ''} 
-                            onChange={(e) => setSelectedBusinessId(Number(e.target.value))}
+                            onChange={handleActiveBusinessChange}
                         >
                             {businesses.map(biz => (
                                 <option key={biz.id} value={biz.id}>{biz.business_name}</option>

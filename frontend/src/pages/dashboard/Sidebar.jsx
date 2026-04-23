@@ -92,6 +92,11 @@ export function Sidebar({ currentPage, setCurrentPage }) {
     const user = useAuthStore((state) => state.user);
     const logout = useAuthStore((state) => state.logout);
     const navigate = useNavigate();
+    const activeBusinessLabel = user?.lastActiveBusinessName
+        ? `Active Business: ${user.lastActiveBusinessName}`
+        : user?.lastActiveBusinessId
+        ? `Active Business: #${user.lastActiveBusinessId}`
+        : "Active Business: Not selected";
 
     return (
         <aside className="sidebar">
@@ -136,7 +141,7 @@ export function Sidebar({ currentPage, setCurrentPage }) {
                     <div className="avatar">{user.username.charAt(0).toUpperCase()}</div>
                     <div className="user-info">
                         <h4>{user.username}</h4>
-                        <p>{user.email}</p>
+                        <p>{activeBusinessLabel}</p>
                     </div>
                 </div>
             </div>
