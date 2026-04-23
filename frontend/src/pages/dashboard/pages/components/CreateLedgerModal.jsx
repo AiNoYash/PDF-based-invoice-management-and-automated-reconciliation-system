@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import './CreateLedgerModal.css';
+import useAuthStore from "../../../../store/useAuthStore";
 
 const mockBankAccounts = [
   { id: 'bank_1', name: 'HDFC Current', lastFour: '1234' },
@@ -18,6 +19,8 @@ const years = Array.from({ length: 5 }, (_, i) => currentYear - i);
 // ! For the backend person please remember you have to make stuff like mockBankAccounts and stuff at a layer above or store them in zustand store
 export  function CreateLedgerModal({ isOpen, onClose }) {
 
+  const token = useAuthStore(state => state.token);
+
   const [formData, setFormData] = useState({
     name: '',
     month: months[new Date().getMonth()],
@@ -34,10 +37,38 @@ export  function CreateLedgerModal({ isOpen, onClose }) {
     setFiles(Array.from(e.target.files));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    // The backend route (upload.single('invoice')) expects one file named 'invoice'
+    if (files.length > 0) {
+      const fileToUpload = files[0];
+      const uploadData = new FormData();
+      uploadData.append('invoice', fileToUpload);
+
+      try {
+        const response = await fetch('http://localhost:8085/api/v1/invoice/upload', {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${token}`
+            // Warning: Do not manually set Content-Type header when using FormData; the browser sets it automatically with the correct boundary boundary
+          },
+          body: uploadData
+        });
+
+        if (response.ok) {
+          const result = await response.json();
+          alert(result.message); // Visual confirmation!
+        } else {
+          alert('Failed to upload file. Please check server logs.');
+        }
+      } catch (error) {
+        console.error("Upload error:", error);
+        alert('Could not reach the server to upload the file.');
+      }
+    }
+
     console.log("Submitting Ledger:", formData);
-    console.log("Attached Files:", files);
     onClose(); // Close modal after mock submit
   };
 

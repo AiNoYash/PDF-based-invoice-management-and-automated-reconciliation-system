@@ -3,7 +3,7 @@ const updateActiveBusiness = async (req, res) => {
         const { businessId } = req.body;
 
         const userId = req.user.userId || req.user.id; // ! we will never know which one can come in future
-        
+
         await UserModel.updateLastActiveBusiness(userId, businessId);
         res.status(200).json({ message: 'Business ID updated successfully' });
 

@@ -17,7 +17,16 @@ const initSchema = async () => {
 
     // Execute each query sequentially
     for (const query of queries) {
-        await pool.query(query);
+        try {
+            await pool.query(query);
+        } catch (err) {
+            // Ignore duplicate column errors from repeated ALTER TABLE
+            if (err.code === 'ER_DUP_FIELDNAME' || err.code === 'ER_CANT_DROP_FIELD_OR_KEY') {
+                console.log(`Skipping query due to existing schema: ${err.message}`);
+            } else {
+                throw err;
+            }
+        }
     }
 
 };

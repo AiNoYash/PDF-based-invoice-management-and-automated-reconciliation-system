@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './SettingsPage.css'; 
+import './SettingsPage.css';
 import useAuthStore from "./../../../store/useAuthStore";
 
 export function SettingsPage() {
@@ -7,14 +7,14 @@ export function SettingsPage() {
     // const [username, setUsername] = useState('Yash');
     const user = useAuthStore(state => state.user);
     const setLastActiveBusinessId = useAuthStore(state => state.setLastActiveBusinessId);
-    const username = user.username;
+    const username = user?.username ?? 'User';
 
     const [newUsername, setNewUsername] = useState('');
-    
+
     const [businesses, setBusinesses] = useState([
         { id: 1, business_name: 'Yash Tech' }
     ]);
-    
+
     const [newBusinessName, setNewBusinessName] = useState('');
     const [selectedBusinessId, setSelectedBusinessId] = useState(user?.lastActiveBusinessId || 1);
 
@@ -51,7 +51,7 @@ export function SettingsPage() {
             // API call to delete business
             const updatedBusinesses = businesses.filter(biz => biz.id !== id);
             setBusinesses(updatedBusinesses);
-            
+
             // If the deleted business was the active one, fallback to another or null
             if (selectedBusinessId === id) {
                 const nextActiveBusiness = updatedBusinesses.length > 0 ? updatedBusinesses[0] : null;
@@ -59,7 +59,7 @@ export function SettingsPage() {
                 setSelectedBusinessId(nextActiveBusinessId);
                 setLastActiveBusinessId(nextActiveBusinessId, nextActiveBusiness ? nextActiveBusiness.business_name : null);
             }
-            
+
             // Simulating DB CASCADE DELETE
             setBankAccounts(bankAccounts.filter(acc => acc.business_id !== id));
         }
@@ -93,11 +93,11 @@ export function SettingsPage() {
                 <div className="form-group">
                     <label>Current Username: {username}</label>
                     <div className="input-group">
-                        <input 
-                            type="text" 
-                            placeholder="New Username" 
-                            value={newUsername} 
-                            onChange={(e) => setNewUsername(e.target.value)} 
+                        <input
+                            type="text"
+                            placeholder="New Username"
+                            value={newUsername}
+                            onChange={(e) => setNewUsername(e.target.value)}
                         />
                         <button onClick={handleUpdateUsername} className="btn-primary">Update</button>
                     </div>
@@ -110,7 +110,7 @@ export function SettingsPage() {
             {/* 2. Business Management */}
             <section className="settings-section">
                 <h3>Manage Businesses</h3>
-                
+
                 {/* Active Business Selector */}
                 <div className="business-selector" style={{ marginBottom: '1.5rem' }}>
                     <label><strong>Select Active Business (Site-Wide):</strong></label>
@@ -119,7 +119,7 @@ export function SettingsPage() {
                     ) : (
                         <select 
                             value={selectedBusinessId || ''} 
-                            onChange={handleActiveBusinessChange}
+                            onChange={(e) => setSelectedBusinessId(Number(e.target.value))}
                         >
                             {businesses.map(biz => (
                                 <option key={biz.id} value={biz.id}>{biz.business_name}</option>
@@ -135,7 +135,7 @@ export function SettingsPage() {
                         {businesses.map(biz => (
                             <li key={biz.id} className="settings-list-item">
                                 <span>
-                                    {biz.business_name} 
+                                    {biz.business_name}
                                     {selectedBusinessId === biz.id && <span className="badge-active">Active</span>}
                                 </span>
                                 <button onClick={() => handleDeleteBusiness(biz.id)} className="btn-danger-small">Remove</button>
@@ -148,11 +148,11 @@ export function SettingsPage() {
                 <div className="add-form-container">
                     <h4>Add New Business</h4>
                     <div className="input-group">
-                        <input 
-                            type="text" 
-                            placeholder="New Business Name" 
-                            value={newBusinessName} 
-                            onChange={(e) => setNewBusinessName(e.target.value)} 
+                        <input
+                            type="text"
+                            placeholder="New Business Name"
+                            value={newBusinessName}
+                            onChange={(e) => setNewBusinessName(e.target.value)}
                         />
                         <button onClick={handleAddBusiness} className="btn-primary">Add</button>
                     </div>
@@ -167,7 +167,7 @@ export function SettingsPage() {
                 ) : (
                     <>
                         <p>Managing accounts for the currently active business.</p>
-                        
+
                         <ul className="settings-list" style={{ marginBottom: '1.5rem' }}>
                             {activeBusinessBankAccounts.map(acc => (
                                 <li key={acc.id} className="settings-list-item">
@@ -180,24 +180,24 @@ export function SettingsPage() {
                         <div className="add-form-container">
                             <h4>Add New Bank Account</h4>
                             <div className="input-group multi-input">
-                                <input 
-                                    type="text" 
-                                    placeholder="Bank Name (e.g. HDFC)" 
-                                    value={newBankDetails.bank_name} 
-                                    onChange={(e) => setNewBankDetails({...newBankDetails, bank_name: e.target.value})} 
+                                <input
+                                    type="text"
+                                    placeholder="Bank Name (e.g. HDFC)"
+                                    value={newBankDetails.bank_name}
+                                    onChange={(e) => setNewBankDetails({ ...newBankDetails, bank_name: e.target.value })}
                                 />
-                                <input 
-                                    type="text" 
-                                    placeholder="Nickname" 
-                                    value={newBankDetails.account_nickname} 
-                                    onChange={(e) => setNewBankDetails({...newBankDetails, account_nickname: e.target.value})} 
+                                <input
+                                    type="text"
+                                    placeholder="Nickname"
+                                    value={newBankDetails.account_nickname}
+                                    onChange={(e) => setNewBankDetails({ ...newBankDetails, account_nickname: e.target.value })}
                                 />
-                                <input 
-                                    type="text" 
+                                <input
+                                    type="text"
                                     maxLength="4"
-                                    placeholder="Last 4 Digits" 
-                                    value={newBankDetails.account_last_four} 
-                                    onChange={(e) => setNewBankDetails({...newBankDetails, account_last_four: e.target.value})} 
+                                    placeholder="Last 4 Digits"
+                                    value={newBankDetails.account_last_four}
+                                    onChange={(e) => setNewBankDetails({ ...newBankDetails, account_last_four: e.target.value })}
                                 />
                                 <button onClick={handleAddBankAccount} className="btn-primary">Add</button>
                             </div>
