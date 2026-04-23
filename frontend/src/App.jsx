@@ -5,6 +5,11 @@ import Dashboard from './pages/dashboard/Dashboard';
 import Auth from './pages/Auth';
 import ProtectedRoute from './components/ProtectedRoute'; // Import the guard
 import useAuthStore from './store/useAuthStore';
+import { DashboardPage } from './pages/dashboard/pages/DashBoardPage';
+import { LedgerCollectionPage } from './pages/dashboard/pages/LedgerCollectionPage';
+import { BankStatementsPage } from './pages/dashboard/pages/BankStatementsPage';
+import { ReconciliationsPage } from './pages/dashboard/pages/ReconciliationsPage';
+import { SettingsPage } from './pages/dashboard/pages/SettingsPage';
 
 function App() {
 
@@ -23,11 +28,15 @@ function App() {
         <Route path="/auth" element={<Auth />} />
 
         <Route element={<ProtectedRoute />}>
-          <Route path="/dashboard" element={<Dashboard />} />
-          {/* You can add more private routes here later, like /settings or /invoices */}
+          <Route path="/dashboard" element={<Dashboard />}>
+            <Route index element={<DashboardPage />} />
+
+            <Route path="ledger-collection" element={<LedgerCollectionPage />} />
+            <Route path="bank-statements" element={<BankStatementsPage />} />
+            <Route path="reconciliations" element={<ReconciliationsPage />} />
+            <Route path="settings" element={<SettingsPage />} />
+          </Route>
         </Route>
-
-
       </Routes>
     </Router>
   );

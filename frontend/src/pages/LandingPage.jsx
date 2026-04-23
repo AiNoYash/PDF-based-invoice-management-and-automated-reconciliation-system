@@ -1,6 +1,7 @@
 import React from 'react';
 import '../App.css';
 import './LandingPage.css';
+import useAuthStore from '../store/useAuthStore';
 
 // SVGs
 const BarChartIcon = () => (
@@ -26,6 +27,10 @@ const ArrowRightIcon = () => (
 import { Link } from 'react-router-dom';
 
 function LandingPage() {
+
+  const isAuthenticated = useAuthStore(state => state.isAuthenticated);
+  const user = useAuthStore(state => state.user);
+
   return (
     <div className="landing-page">
 
@@ -42,10 +47,24 @@ function LandingPage() {
           <Link to="/dashboard" className="nav-link">Dashboard</Link>
         </div>
         <div className="nav-right">
-          <Link to="/auth?mode=login"><button className="btn-login">Log In</button></Link>
-          <Link to="/auth?mode=signup">
-            <button className="btn-primary">Get Started</button>
-          </Link>
+          {
+            isAuthenticated ?
+              <div className="user-profile">
+                <div className="avatar">{user.username.charAt(0).toUpperCase()}</div>
+                <div className="user-info">
+                  <h4>{user.username}</h4>
+                  <p>{user.email}</p>
+                </div>
+              </div>
+              :
+              <>
+                <Link to="/auth?mode=login"><button className="btn-login">Log In</button></Link>
+                <Link to="/auth?mode=signup">
+                  <button className="btn-primary">Get Started</button>
+                </Link>
+              </>
+          }
+
         </div>
       </nav>
 
