@@ -20,7 +20,6 @@ app.use(morgan('dev'));
 app.get('/lol', (req, res) => {
     res.status(200).json({ message: 'API is running cleanly' });
 });
-
 // Routes
 app.use('/api/v1/auth', authRoute);
 app.use('/api/v1/settings', settingsRoute);
