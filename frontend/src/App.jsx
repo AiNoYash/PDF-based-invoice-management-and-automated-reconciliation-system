@@ -11,6 +11,7 @@ import { BankStatementsPage } from './pages/dashboard/pages/BankStatementsPage';
 import { ReconciliationsPage } from './pages/dashboard/pages/ReconciliationsPage';
 import { SettingsPage } from './pages/dashboard/pages/SettingsPage';
 import { LedgerDetails } from './pages/dashboard/pages/components/LedgerDetails';
+import { StatementGroupDetails } from "./pages/dashboard/pages/components/StatementGroupDetails";
 
 
 function App() {
@@ -38,7 +39,11 @@ function App() {
               <Route path=":id" element={<LedgerDetails />} />
             </Route>
 
-            <Route path="bank-statements" element={<BankStatementsPage />} />
+            <Route path="bank-statements"  >
+              <Route index element={<BankStatementsPage />} />
+              <Route path=":id" element={<StatementGroupDetails />} />
+            </Route>
+
             <Route path="reconciliations" element={<ReconciliationsPage />} />
             <Route path="settings" element={<SettingsPage />} />
           </Route>
