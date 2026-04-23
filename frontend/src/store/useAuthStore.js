@@ -61,7 +61,7 @@ const useAuthStore = create(
               }
             : null
         }));
-        
+
         const token = get().token;
         if (!token) return;
 
