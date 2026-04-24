@@ -59,6 +59,7 @@ const uploadInvoice = async (req, res) => {
         const filePath = req.file.path;
         const dataBuffer = fs.readFileSync(filePath);
         
+        const pdfParse = getPdfParser();
         const data = await pdfParse(dataBuffer);
         const text = data.text;
         
@@ -85,6 +86,13 @@ const uploadInvoice = async (req, res) => {
         });
     } catch (error) {
         console.error("Upload/Parse error:", error);
+
+        if (String(error?.message || '').includes('DOMMatrix is not defined')) {
+            return res.status(500).json({
+                message: "PDF parsing failed because runtime does not support required DOM APIs. Use Node.js 20 LTS or a pdf parser version compatible with your Node runtime."
+            });
+        }
+
         res.status(500).json({ message: "Server error during PDF processing" });
     }
 };
