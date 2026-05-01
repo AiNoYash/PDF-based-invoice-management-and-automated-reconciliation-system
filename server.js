@@ -10,6 +10,8 @@ const settingsRoute = require('./routes/settingsRoute');
 const invoiceRoute = require('./routes/invoiceRoute');
 const initSchema = require('./config/initSchema');
 
+const ledgerRoute = require('./routes/ledgerRoute');
+
 const app = express();
 
 // Middleware
@@ -25,6 +27,7 @@ app.get('/lol', (req, res) => {
 app.use('/api/v1/auth', authRoute);
 app.use('/api/v1/settings', settingsRoute);
 app.use('/api/v1/invoice', invoiceRoute);
+app.use('/api/v1/ledger', ledgerRoute);
 
 // Initialize database and start server
 const PORT = process.env.PORT || 8085;
