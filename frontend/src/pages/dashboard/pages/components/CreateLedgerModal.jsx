@@ -18,7 +18,6 @@ export function CreateLedgerModal({ isOpen, onClose }) {
 
   // ── Form state ──────────────────────────────────────────────────────────────
   const [formData, setFormData] = useState({
-    name: '',
     month: months[new Date().getMonth()],
     year: currentYear,
     bankAccountId: ''
@@ -109,7 +108,6 @@ export function CreateLedgerModal({ isOpen, onClose }) {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          name: formData.name,
           bankAccountId: Number(formData.bankAccountId),
           targetMonth,
           targetYear: Number(formData.year)
@@ -195,19 +193,6 @@ export function CreateLedgerModal({ isOpen, onClose }) {
         )}
 
         <form className="modal-form" onSubmit={handleSubmit}>
-
-          {/* Ledger Name */}
-          <div className="form-group">
-            <label>Ledger Name</label>
-            <input
-              type="text"
-              required
-              placeholder="e.g., April Sales Invoices"
-              value={formData.name}
-              onChange={e => setFormData({ ...formData, name: e.target.value })}
-              disabled={submitting}
-            />
-          </div>
 
           {/* Month + Year */}
           <div className="form-row">

@@ -27,7 +27,6 @@ CREATE TABLE IF NOT EXISTS bank_accounts (
 CREATE TABLE IF NOT EXISTS ledgers (
     id INT AUTO_INCREMENT PRIMARY KEY,
     bank_account_id INT NOT NULL,
-    name VARCHAR(255) NOT NULL,
     target_month INT NOT NULL,   -- 1-12
     target_year INT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -132,6 +131,10 @@ CREATE TABLE IF NOT EXISTS reconciliation_matches (
 -- Apply unique constraints to existing tables - safe to re-run, initSchema.js ignores ER_DUP_KEYNAME
 ALTER TABLE ledgers ADD UNIQUE KEY unique_ledger_period (bank_account_id, target_month, target_year);
 ALTER TABLE bank_statement_groups ADD UNIQUE KEY unique_statement_period (bank_account_id, target_month, target_year);
+<<<<<<< HEAD
+ALTER TABLE ledgers DROP COLUMN name;
+=======
 
 ALTER TABLE bank_statement_records ADD COLUMN customer_name VARCHAR(255);
 ALTER TABLE bank_statement_records ADD COLUMN invoice_number VARCHAR(255);
+>>>>>>> 0f43685ea069975c0cbfa259c83d4b574e764245

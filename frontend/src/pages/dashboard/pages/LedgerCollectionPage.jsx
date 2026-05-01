@@ -75,9 +75,8 @@ export const LedgerCollectionPage = () => {
           <table className="ledger-table">
             <thead>
               <tr>
-                <th>Name</th>
-                <th>Bank Account</th>
                 <th>Period</th>
+                <th>Bank Account</th>
                 <th>Entries</th>
                 <th>Created At</th>
               </tr>
@@ -90,9 +89,8 @@ export const LedgerCollectionPage = () => {
                     navigate(String(ledger.id));
                   }}
                 >
-                  <td className="cell-name">{ledger.name}</td>
-                  <td className="cell-bank">{ledger.bankAccount}</td>
                   <td>{ledger.month} {ledger.year}</td>
+                  <td className="cell-bank">{ledger.bankAccount}</td>
                   <td className="cell-entries">{ledger.entries}</td>
                   <td>{ledger.createdAt}</td>
                 </tr>
