@@ -1,78 +1,187 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './SettingsPage.css';
 import useAuthStore from "./../../../store/useAuthStore";
 
+const API_BASE_URL = 'http://localhost:8085/api/v1';
+
 export function SettingsPage() {
 
-    // const [username, setUsername] = useState('Yash');
     const user = useAuthStore(state => state.user);
+    const token = useAuthStore(state => state.token);
     const setLastActiveBusinessId = useAuthStore(state => state.setLastActiveBusinessId);
+    const updateUser = useAuthStore(state => state.updateUser);
+    const logout = useAuthStore(state => state.logout);
+    
     const username = user?.username ?? 'User';
 
     const [newUsername, setNewUsername] = useState('');
-
-    const [businesses, setBusinesses] = useState([
-        { id: 1, business_name: 'Yash Tech' }
-    ]);
-
+    const [businesses, setBusinesses] = useState([]);
     const [newBusinessName, setNewBusinessName] = useState('');
-    const [selectedBusinessId, setSelectedBusinessId] = useState(user?.lastActiveBusinessId || 1);
-
-    const [bankAccounts, setBankAccounts] = useState([
-        { id: 1, business_id: 1, bank_name: 'HDFC', account_nickname: 'Main Operations', account_last_four: '1234' }
-    ]);
+    const [selectedBusinessId, setSelectedBusinessId] = useState(user?.lastActiveBusinessId || null);
+    const [bankAccounts, setBankAccounts] = useState([]);
     const [newBankDetails, setNewBankDetails] = useState({ bank_name: '', account_nickname: '', account_last_four: '' });
 
-    // --- Handlers ---
-    const handleUpdateUsername = () => {
-        // if (newUsername) setUsername(newUsername);
-        setNewUsername('');
-    };
-
-    const handleDeleteAccount = () => {
-        if (window.confirm("Are you sure you want to permanently delete your account?")) {
-            console.log("Account deleted");
-        }
-    };
-
-    const handleAddBusiness = () => {
-        if (!newBusinessName) return;
-        const newBiz = { id: Date.now(), business_name: newBusinessName };
-        setBusinesses([...businesses, newBiz]);
-        if (!selectedBusinessId) {
-            setSelectedBusinessId(newBiz.id);
-            setLastActiveBusinessId(newBiz.id, newBiz.business_name);
-        }
-        setNewBusinessName('');
-    };
-
-    const handleDeleteBusiness = (id) => {
-        if (window.confirm("Are you sure? This will delete the business and all linked bank accounts.")) {
-            // API call to delete business
-            const updatedBusinesses = businesses.filter(biz => biz.id !== id);
-            setBusinesses(updatedBusinesses);
-
-            // If the deleted business was the active one, fallback to another or null
-            if (selectedBusinessId === id) {
-                const nextActiveBusiness = updatedBusinesses.length > 0 ? updatedBusinesses[0] : null;
-                const nextActiveBusinessId = nextActiveBusiness ? nextActiveBusiness.id : null;
-                setSelectedBusinessId(nextActiveBusinessId);
-                setLastActiveBusinessId(nextActiveBusinessId, nextActiveBusiness ? nextActiveBusiness.business_name : null);
+    // Fetch initial data
+    useEffect(() => {
+        const fetchData = async () => {
+            if (!token) return;
+            try {
+                const res = await fetch(`${API_BASE_URL}/settings/data`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                if (res.ok) {
+                    const data = await res.json();
+                    setBusinesses(data.businesses || []);
+                    setBankAccounts(data.bankAccounts || []);
+                    
+                    if (data.businesses && data.businesses.length > 0) {
+                        const currentActive = user?.lastActiveBusinessId;
+                        const activeExists = data.businesses.some(b => b.id === currentActive);
+                        if (!activeExists) {
+                            setSelectedBusinessId(data.businesses[0].id);
+                            setLastActiveBusinessId(data.businesses[0].id, data.businesses[0].business_name);
+                        }
+                    }
+                }
+            } catch (error) {
+                console.error('Error fetching settings data:', error);
             }
+        };
+        fetchData();
+    }, [token, user?.lastActiveBusinessId, setLastActiveBusinessId]);
 
-            // Simulating DB CASCADE DELETE
-            setBankAccounts(bankAccounts.filter(acc => acc.business_id !== id));
+    // --- Handlers ---
+    const handleUpdateUsername = async () => {
+        if (!newUsername) return;
+        try {
+            const res = await fetch(`${API_BASE_URL}/settings/username`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({ username: newUsername })
+            });
+            if (res.ok) {
+                updateUser({ username: newUsername });
+                setNewUsername('');
+            }
+        } catch (error) {
+            console.error('Error updating username:', error);
         }
     };
 
-    const handleAddBankAccount = () => {
-        if (!newBankDetails.bank_name || !selectedBusinessId) return;
-        setBankAccounts([...bankAccounts, { id: Date.now(), business_id: selectedBusinessId, ...newBankDetails }]);
-        setNewBankDetails({ bank_name: '', account_nickname: '', account_last_four: '' });
+    const handleDeleteAccount = async () => {
+        if (window.confirm("Are you sure you want to permanently delete your account?")) {
+            try {
+                const res = await fetch(`${API_BASE_URL}/settings/account`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                if (res.ok) {
+                    logout();
+                }
+            } catch (error) {
+                console.error('Error deleting account:', error);
+            }
+        }
     };
 
-    const handleDeleteBankAccount = (id) => {
-        setBankAccounts(bankAccounts.filter(acc => acc.id !== id));
+    const handleAddBusiness = async () => {
+        if (!newBusinessName) return;
+        try {
+            const res = await fetch(`${API_BASE_URL}/settings/business`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({ business_name: newBusinessName })
+            });
+            if (res.ok) {
+                const data = await res.json();
+                const newBiz = { id: data.id, business_name: data.business_name, user_id: data.user_id };
+                setBusinesses([...businesses, newBiz]);
+                
+                if (!selectedBusinessId) {
+                    setSelectedBusinessId(newBiz.id);
+                    setLastActiveBusinessId(newBiz.id, newBiz.business_name);
+                }
+                setNewBusinessName('');
+            }
+        } catch (error) {
+            console.error('Error adding business:', error);
+        }
+    };
+
+    const handleDeleteBusiness = async (id) => {
+        if (window.confirm("Are you sure? This will delete the business and all linked bank accounts.")) {
+            try {
+                const res = await fetch(`${API_BASE_URL}/settings/business/${id}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                if (res.ok) {
+                    const updatedBusinesses = businesses.filter(biz => biz.id !== id);
+                    setBusinesses(updatedBusinesses);
+
+                    if (selectedBusinessId === id) {
+                        const nextActiveBusiness = updatedBusinesses.length > 0 ? updatedBusinesses[0] : null;
+                        const nextActiveBusinessId = nextActiveBusiness ? nextActiveBusiness.id : null;
+                        setSelectedBusinessId(nextActiveBusinessId);
+                        setLastActiveBusinessId(nextActiveBusinessId, nextActiveBusiness ? nextActiveBusiness.business_name : null);
+                    }
+
+                    setBankAccounts(bankAccounts.filter(acc => acc.business_id !== id));
+                }
+            } catch (error) {
+                console.error('Error deleting business:', error);
+            }
+        }
+    };
+
+    const handleAddBankAccount = async () => {
+        if (!newBankDetails.bank_name || !selectedBusinessId) return;
+        try {
+            const res = await fetch(`${API_BASE_URL}/settings/bank-account`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    business_id: selectedBusinessId,
+                    ...newBankDetails
+                })
+            });
+            if (res.ok) {
+                const data = await res.json();
+                setBankAccounts([...bankAccounts, { 
+                    id: data.id, 
+                    business_id: data.business_id, 
+                    bank_name: data.bank_name,
+                    account_nickname: data.account_nickname,
+                    account_last_four: data.account_last_four
+                }]);
+                setNewBankDetails({ bank_name: '', account_nickname: '', account_last_four: '' });
+            }
+        } catch (error) {
+            console.error('Error adding bank account:', error);
+        }
+    };
+
+    const handleDeleteBankAccount = async (id) => {
+        try {
+            const res = await fetch(`${API_BASE_URL}/settings/bank-account/${id}`, {
+                method: 'DELETE',
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            if (res.ok) {
+                setBankAccounts(bankAccounts.filter(acc => acc.id !== id));
+            }
+        } catch (error) {
+            console.error('Error deleting bank account:', error);
+        }
     };
 
     const handleActiveBusinessChange = (e) => {
@@ -119,7 +228,7 @@ export function SettingsPage() {
                     ) : (
                         <select 
                             value={selectedBusinessId || ''} 
-                            onChange={(e) => setSelectedBusinessId(Number(e.target.value))}
+                            onChange={handleActiveBusinessChange}
                         >
                             {businesses.map(biz => (
                                 <option key={biz.id} value={biz.id}>{biz.business_name}</option>
