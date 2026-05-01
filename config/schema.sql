@@ -28,10 +28,12 @@ CREATE TABLE IF NOT EXISTS ledgers (
     id INT AUTO_INCREMENT PRIMARY KEY,
     bank_account_id INT NOT NULL,
     name VARCHAR(255) NOT NULL,
-    target_month INT NOT NULL,
+    target_month INT NOT NULL,   -- 1-12
     target_year INT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (bank_account_id) REFERENCES bank_accounts(id) ON DELETE CASCADE
+    FOREIGN KEY (bank_account_id) REFERENCES bank_accounts(id) ON DELETE CASCADE,
+    -- Only ONE ledger allowed per bank account per month per year
+    UNIQUE KEY unique_ledger_period (bank_account_id, target_month, target_year)
 );
 
 CREATE TABLE IF NOT EXISTS ledger_files (
@@ -64,10 +66,12 @@ CREATE TABLE IF NOT EXISTS bank_statement_groups (
     id INT AUTO_INCREMENT PRIMARY KEY,
     bank_account_id INT NOT NULL,
     name VARCHAR(255) NOT NULL,
-    target_month INT NOT NULL,
+    target_month INT NOT NULL,   -- 1-12
     target_year INT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (bank_account_id) REFERENCES bank_accounts(id) ON DELETE CASCADE
+    FOREIGN KEY (bank_account_id) REFERENCES bank_accounts(id) ON DELETE CASCADE,
+    -- Only ONE bank statement group allowed per bank account per month per year
+    UNIQUE KEY unique_statement_period (bank_account_id, target_month, target_year)
 );
 
 
@@ -125,4 +129,6 @@ CREATE TABLE IF NOT EXISTS reconciliation_matches (
 -- ADD COLUMN last_active_business_id INT,
 -- ADD FOREIGN KEY (last_active_business_id) REFERENCES businesses(id) ON DELETE SET NULL;
 
--- ? Need to run above lines only once PLEASE   
+-- Apply unique constraints to existing tables - safe to re-run, initSchema.js ignores ER_DUP_KEYNAME
+-- ALTER TABLE ledgers ADD UNIQUE KEY unique_ledger_period (bank_account_id, target_month, target_year);
+-- ALTER TABLE bank_statement_groups ADD UNIQUE KEY unique_statement_period (bank_account_id, target_month, target_year);

@@ -7,6 +7,7 @@ const morgan = require('morgan');
 
 const authRoute = require('./routes/authRoute');
 const settingsRoute = require('./routes/settingsRoute');
+const invoiceRoute = require('./routes/invoiceRoute');
 const initSchema = require('./config/initSchema');
 
 const app = express();
@@ -23,6 +24,7 @@ app.get('/lol', (req, res) => {
 // Routes
 app.use('/api/v1/auth', authRoute);
 app.use('/api/v1/settings', settingsRoute);
+app.use('/api/v1/invoice', invoiceRoute);
 
 // Initialize database and start server
 const PORT = process.env.PORT || 8085;

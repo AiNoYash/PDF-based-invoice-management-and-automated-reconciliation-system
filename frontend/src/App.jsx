@@ -5,13 +5,14 @@ import Dashboard from './pages/dashboard/Dashboard';
 import Auth from './pages/Auth';
 import ProtectedRoute from './components/ProtectedRoute'; // Import the guard
 import useAuthStore from './store/useAuthStore';
-import { DashboardPage } from './pages/dashboard/pages/DashBoardPage';
+import { DashboardPage } from './pages/dashboard/pages/DashboardPage';
 import { LedgerCollectionPage } from './pages/dashboard/pages/LedgerCollectionPage';
 import { BankStatementsPage } from './pages/dashboard/pages/BankStatementsPage';
 import { ReconciliationsPage } from './pages/dashboard/pages/ReconciliationsPage';
 import { SettingsPage } from './pages/dashboard/pages/SettingsPage';
 import { LedgerDetails } from './pages/dashboard/pages/components/LedgerDetails';
 import { StatementGroupDetails } from "./pages/dashboard/pages/components/StatementGroupDetails";
+import { ReconciliationDetails } from './pages/dashboard/pages/components/ReconciliationDetails';
 
 
 function App() {
@@ -44,7 +45,11 @@ function App() {
               <Route path=":id" element={<StatementGroupDetails />} />
             </Route>
 
-            <Route path="reconciliations" element={<ReconciliationsPage />} />
+            <Route path="reconciliations"  >
+              <Route index element={<ReconciliationsPage />} />
+              <Route path=":id" element={<ReconciliationDetails />} />
+            </Route>
+
             <Route path="settings" element={<SettingsPage />} />
           </Route>
         </Route>

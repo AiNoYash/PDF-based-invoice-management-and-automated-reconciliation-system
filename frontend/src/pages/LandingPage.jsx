@@ -50,6 +50,9 @@ const handleSmoothScroll = (e, targetId) => {
 function LandingPage() {
   const isAuthenticated = useAuthStore(state => state.isAuthenticated);
   const user = useAuthStore(state => state.user);
+  const username = user?.username;
+  const email = user?.email;
+  const avatarLetter = (username?.[0] ?? '?').toUpperCase();
 
   return (
     <div className="landing-page">
@@ -67,12 +70,12 @@ function LandingPage() {
           <Link to="/dashboard" className="nav-link">Dashboard</Link>
         </div>
         <div className="nav-right">
-          {isAuthenticated ? (
+          {isAuthenticated && username ? (
             <div className="user-profile">
-              <div className="avatar">{user.username.charAt(0).toUpperCase()}</div>
+              <div className="avatar">{avatarLetter}</div>
               <div className="user-info">
-                <h4>{user.username}</h4>
-                <p>{user.email}</p>
+                <h4>{username}</h4>
+                <p>{email}</p>
               </div>
             </div>
           ) : (

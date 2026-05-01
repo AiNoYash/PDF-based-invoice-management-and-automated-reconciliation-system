@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, Outlet } from 'react-router-dom';
+import { Link, Outlet, useLocation } from 'react-router-dom';
 import { Sidebar } from './Sidebar';
 import './Dashboard.css';
 import { CreateLedgerModal } from './pages/components/CreateLedgerModal';
@@ -17,13 +17,21 @@ const titles = {
 }
 
 function Dashboard() {
-  const [currentPage, setCurrentPage] = useState("Dashboard");
+  const location = useLocation();
+  const path = location.pathname;
+
+  let currentPage = "Dashboard";
+  if (path.includes("ledger-collection")) currentPage = "LedgerCollection";
+  else if (path.includes("bank-statements")) currentPage = "BankStatements";
+  else if (path.includes("reconciliations")) currentPage = "Reconciliations";
+  else if (path.includes("settings")) currentPage = "Settings";
+
   const [showCreateModalOverlay, setShowCreateModalOverlay] = useState(false);
 
   return (
     <div className="dashboard-layout">
       {/* Sidebar Navigation */}
-      <Sidebar currentPage={currentPage} setCurrentPage={setCurrentPage} />
+      <Sidebar />
 
       {/* Main Content Area */}
       <main className="main-content">
@@ -33,7 +41,7 @@ function Dashboard() {
           </div>
 
           {
-            currentPage === "Dashboard" ? null :
+            currentPage === "Dashboard" || currentPage === "Settings" ? null :
               <div className="topbar-right">
                 <Link className="btn-upload-primary" onClick={() => {
                   setShowCreateModalOverlay(true);
