@@ -11,13 +11,12 @@
   padding: 1rem;
 }
 
-/* Extends the auth-card design logic */
 .modal-card {
   background: white;
   border-radius: 20px;
   box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(0,0,0,0.02);
   width: 100%;
-  max-width: 480px;
+  max-width: 520px;
   padding: 2.5rem;
   max-height: 90vh;
   overflow-y: auto;
@@ -47,9 +46,31 @@
   padding: 0;
   transition: color 0.2s;
 }
+.btn-close:hover { color: var(--text-main); }
+.btn-close:disabled { opacity: 0.4; cursor: not-allowed; }
 
-.btn-close:hover {
-  color: var(--text-main);
+/* Error banner */
+.modal-error-banner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 10px;
+  padding: 0.65rem 1rem;
+  margin-bottom: 1rem;
+  font-size: 0.875rem;
+  color: #dc2626;
+  gap: 0.5rem;
+}
+.modal-error-banner button {
+  background: none;
+  border: none;
+  color: #dc2626;
+  cursor: pointer;
+  font-size: 0.9rem;
+  padding: 0;
+  flex-shrink: 0;
 }
 
 .modal-form {
@@ -58,7 +79,6 @@
   gap: 1.25rem;
 }
 
-/* Safely scoping inputs in case .form-group input isn't globally available */
 .modal-form .form-group input,
 .modal-form .form-select {
   padding: 0.8rem 1rem;
@@ -79,75 +99,173 @@
   box-shadow: 0 0 0 2px rgba(5, 150, 105, 0.1);
 }
 
+.modal-form .form-group input:disabled,
+.modal-form .form-select:disabled {
+  background-color: #f9fafb;
+  color: #9ca3af;
+  cursor: not-allowed;
+}
+
 .form-row {
   display: flex;
   gap: 1rem;
 }
+.flex-1 { flex: 1; }
 
-.flex-1 {
-  flex: 1;
+/* Form labels */
+.form-group label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-main, #1e293b);
+  margin-bottom: 0.4rem;
 }
 
-/* Standard dotted file dropzone */
+.label-optional {
+  font-weight: 400;
+  color: var(--text-muted, #64748b);
+  font-size: 0.8rem;
+}
+
+.form-hint {
+  display: block;
+  margin-top: 0.35rem;
+  font-size: 0.8rem;
+  color: var(--text-muted, #94a3b8);
+}
+
+/* ── Drop Zone ──────────────────────────────────────────────────────────────── */
 .file-dropzone {
-  position: relative;
-  margin-top: 0.25rem;
-}
-
-.file-input-hidden {
-  position: absolute;
-  width: 0;
-  height: 0;
-  opacity: 0;
-}
-
-.file-dropzone-label {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 2.5rem 2rem;
-  border: 2px dashed #cbd5e1; /* Light gray standard dotted line */
+  padding: 2rem 2rem;
+  border: 2px dashed #cbd5e1;
   border-radius: 12px;
   background-color: #f8fafc;
   cursor: pointer;
   transition: all 0.2s ease;
   text-align: center;
+  margin-top: 0.25rem;
+}
+.file-dropzone:hover {
+  border-color: var(--primary);
+  background-color: #f0fdf4;
+}
+.file-dropzone.dropzone-disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  pointer-events: none;
 }
 
-.file-dropzone-label:hover {
-  border-color: var(--primary);
-  background-color: #f0fdf4; /* Slight green tint */
+.file-input-hidden {
+  display: none;
 }
 
 .upload-icon {
   color: var(--primary);
-  margin-bottom: 0.75rem;
+  margin-bottom: 0.6rem;
 }
 
-.file-dropzone-label p {
-  margin: 0 0 0.25rem 0;
-  font-size: 0.95rem;
-  color: var(--text-main);
+.file-dropzone p {
+  margin: 0 0 0.2rem 0;
+  font-size: 0.9rem;
+  color: var(--text-main, #334155);
   font-weight: 500;
 }
 
 .file-count {
   font-size: 0.8rem;
-  color: var(--text-muted);
+  color: var(--text-muted, #64748b);
 }
 
-/* Action Buttons */
+/* ── File list ──────────────────────────────────────────────────────────────── */
+.file-list {
+  list-style: none;
+  margin: 0.6rem 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.file-list-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.85rem;
+}
+
+.file-icon {
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+
+.file-name {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--text-main, #1e293b);
+  font-weight: 500;
+}
+
+.file-size {
+  font-size: 0.75rem;
+  color: var(--text-muted, #94a3b8);
+  flex-shrink: 0;
+}
+
+.file-remove-btn {
+  background: none;
+  border: none;
+  color: #94a3b8;
+  cursor: pointer;
+  font-size: 0.8rem;
+  padding: 0 2px;
+  line-height: 1;
+  border-radius: 4px;
+  transition: color 0.15s, background 0.15s;
+  flex-shrink: 0;
+}
+.file-remove-btn:hover {
+  color: #ef4444;
+  background: #fee2e2;
+}
+.file-remove-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+/* Upload progress */
+.upload-status {
+  font-size: 0.875rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 8px;
+  margin: 0;
+}
+.upload-status.uploading {
+  background: #eff6ff;
+  color: #2563eb;
+  border: 1px solid #bfdbfe;
+}
+
+/* ── Action Buttons ─────────────────────────────────────────────────────────── */
 .modal-actions {
   display: flex;
   justify-content: flex-end;
   gap: 1rem;
-  margin-top: 1rem;
+  margin-top: 0.5rem;
 }
 
 .btn-cancel {
   background: transparent;
-  color: var(--text-muted);
+  color: var(--text-muted, #64748b);
   border: none;
   padding: 0.85rem 1.5rem;
   border-radius: 99px;
@@ -156,24 +274,22 @@
   cursor: pointer;
   transition: background-color 0.2s, color 0.2s;
 }
-
 .btn-cancel:hover {
   background-color: #f1f5f9;
   color: var(--text-main);
 }
+.btn-cancel:disabled { opacity: 0.5; cursor: not-allowed; }
 
 .btn-submit {
   background-color: var(--primary);
   color: white;
   border: none;
-  padding: 0.85rem 1.5rem;
+  padding: 0.85rem 1.75rem;
   border-radius: 99px;
   font-weight: 600;
   font-size: 0.95rem;
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: background-color 0.2s, opacity 0.2s;
 }
-
-.btn-submit:hover {
-  background-color: var(--primary-hover, #047857);
-}
+.btn-submit:hover { background-color: var(--primary-hover, #047857); }
+.btn-submit:disabled { opacity: 0.6; cursor: not-allowed; }
