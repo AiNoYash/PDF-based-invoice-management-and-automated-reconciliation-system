@@ -17,7 +17,7 @@ function getClassifier() {
         if (fs.existsSync(MODEL_FILE)) {
             natural.BayesClassifier.load(MODEL_FILE, null, (err, loadedClassifier) => {
                 if (err) return reject(err);
-                
+
                 classifierInstance = loadedClassifier;
                 resolve(classifierInstance);
             });
@@ -34,7 +34,7 @@ function getClassifier() {
  */
 function saveClassifier() {
     if (!classifierInstance) return;
-    
+
     classifierInstance.save(MODEL_FILE, (err) => {
         if (err) console.error("Failed to save model:", err);
         else console.log("Model saved to disk.");
@@ -43,18 +43,18 @@ function saveClassifier() {
 
 
 function trainAndSave() {
-        const classifier = new natural.BayesClassifier();
-        
-        // Add training examples
-        classifier.addDocument('Invoice No:', 'invoice_id_anchor');
-        classifier.addDocument('Invoice #', 'invoice_id_anchor');
-        classifier.addDocument('Bill To:', 'invoice_id_anchor');
-        classifier.addDocument('TAX INVOICE', 'invoice_id_anchor');
-        
-        // Train the classifier
-        classifier.train();
+    const classifier = new natural.BayesClassifier();
 
-        saveClassifier();
+    // Add training examples
+    classifier.addDocument('Invoice No:', 'invoice_id_anchor');
+    classifier.addDocument('Invoice #', 'invoice_id_anchor');
+    classifier.addDocument('Bill To:', 'invoice_id_anchor');
+    classifier.addDocument('TAX INVOICE', 'invoice_id_anchor');
+
+    // Train the classifier
+    classifier.train();
+
+    saveClassifier();
 }
 
 
