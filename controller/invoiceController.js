@@ -2,8 +2,12 @@ const fs = require('fs');
 const pdfParse = require('pdf-parse');
 const db = require('../config/db');
 
+
+
 // Basic regex based parser
 const parseInvoiceText = (text) => {
+
+    
     let transaction_id = null;
     let transaction_date = null;
     let amount = null;
