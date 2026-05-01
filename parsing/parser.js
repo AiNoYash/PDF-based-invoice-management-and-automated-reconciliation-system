@@ -12,9 +12,14 @@
  */
 
 const fs = require('fs');
-const pdfjsLib = require('pdfjs-dist/legacy/build/pdf.js');
+let pdfjsLibPromise;
 
-pdfjsLib.GlobalWorkerOptions.workerSrc = false;
+async function getPdfJsLib() {
+    if (!pdfjsLibPromise) {
+        pdfjsLibPromise = import('pdfjs-dist/legacy/build/pdf.mjs');
+    }
+    return pdfjsLibPromise;
+}
 
 /**
  * Parses a PDF document and extracts detailed text content, including spatial coordinates.
@@ -27,6 +32,7 @@ pdfjsLib.GlobalWorkerOptions.workerSrc = false;
 async function parsePdf(pdfPath) {
     try {
         console.log(`[Parser] Starting extraction for file: ${pdfPath}`);
+        const pdfjsLib = await getPdfJsLib();
 
         // 1. Read the PDF file into a standard Node.js Buffer.
         // We use fs.promises.readFile to read the file asynchronously without blocking the event loop.
@@ -39,7 +45,10 @@ async function parsePdf(pdfPath) {
         // 2. Load the document into pdf.js
         // getDocument initializes the parsing process. It returns a "loading task".
         // The promise inside this task resolves to the actual PDF document object.
-        const loadingTask = pdfjsLib.getDocument({ data: dataUint8Array });
+        const loadingTask = pdfjsLib.getDocument({
+            data: dataUint8Array,
+            disableWorker: true
+        });
         const pdfDocument = await loadingTask.promise;
 
         console.log(`[Parser] Successfully loaded PDF. Total pages: ${pdfDocument.numPages}`);
