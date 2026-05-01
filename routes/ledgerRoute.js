@@ -51,6 +51,9 @@ router.post('/:id/files', authMiddleware, upload.array('files', 10), ledgerContr
 // Get all files for a ledger
 router.get('/:id/files', authMiddleware, ledgerController.getLedgerFiles);
 
+// Get all records for a ledger
+router.get('/:id/records', authMiddleware, ledgerController.getLedgerRecords);
+
 // Delete a ledger
 router.delete('/:id', authMiddleware, ledgerController.deleteLedger);
 

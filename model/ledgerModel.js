@@ -84,6 +84,57 @@ class LedgerModel {
         );
         return rows;
     }
+
+    // Insert a single ledger record (from parsed invoice data)
+    static async addRecord(ledgerId, ledgerFileId, record) {
+        const [result] = await db.execute(
+            `INSERT INTO ledger_records 
+             (ledger_id, ledger_file_id, transaction_id, transaction_date, amount, transaction_type, description) 
+             VALUES (?, ?, ?, ?, ?, ?, ?)`,
+            [
+                ledgerId,
+                ledgerFileId,
+                record.transaction_id,
+                record.transaction_date,
+                record.amount || 0.00,
+                record.transaction_type,
+                record.description
+            ]
+        );
+        return result.insertId;
+    }
+
+    // Insert multiple ledger records in bulk (from multi-page PDF)
+    static async addRecords(ledgerId, ledgerFileId, records) {
+        const insertedIds = [];
+        for (const record of records) {
+            const id = await this.addRecord(ledgerId, ledgerFileId, record);
+            insertedIds.push(id);
+        }
+        return insertedIds;
+    }
+
+    // Get all records for a given ledger
+    static async getRecords(ledgerId) {
+        const [rows] = await db.execute(
+            `SELECT 
+                lr.id,
+                lr.transaction_id,
+                lr.is_reconciled,
+                lr.transaction_date,
+                lr.amount,
+                lr.transaction_type,
+                lr.description,
+                lf.file_path,
+                lf.file_type
+             FROM ledger_records lr
+             LEFT JOIN ledger_files lf ON lr.ledger_file_id = lf.id
+             WHERE lr.ledger_id = ?
+             ORDER BY lr.transaction_date DESC, lr.id ASC`,
+            [ledgerId]
+        );
+        return rows;
+    }
 }
 
 module.exports = LedgerModel;

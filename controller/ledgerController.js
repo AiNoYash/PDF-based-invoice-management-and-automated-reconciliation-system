@@ -1,6 +1,7 @@
 const path = require('path');
 const LedgerModel = require('../model/ledgerModel');
 const BusinessModel = require('../model/businessModel');
+const { parsePdf } = require('../parsing/parser');
 
 // Helper to extract userId consistently (JWT payload uses `userId`)
 const getUserId = (req) => req.user.userId || req.user.id;
@@ -97,7 +98,7 @@ const createLedger = async (req, res) => {
 
 // ─── POST /api/v1/ledger/:id/files ───────────────────────────────────────────
 // Accepts multiple files (multer `array`), stores each in ledger_files.
-// No parsing — just save the file path and type.
+// PDFs are automatically parsed and their data inserted as ledger_records.
 const uploadLedgerFiles = async (req, res) => {
     try {
         const ledgerId = req.params.id;
@@ -120,18 +121,40 @@ const uploadLedgerFiles = async (req, res) => {
             const fileType = (ext === '.pdf') ? 'invoice_pdf' : 'excel_ledger';
 
             const fileId = await LedgerModel.addFile(ledgerId, file.path, fileType);
-            savedFiles.push({
+
+            const fileResult = {
                 id: fileId,
                 originalName: file.originalname,
                 storedName: file.filename,
                 fileType,
-                size: file.size
-            });
+                size: file.size,
+                records: []
+            };
+
+            // If it's a PDF, parse it and insert records
+            if (ext === '.pdf') {
+                try {
+                    const invoiceRecords = await parsePdf(file.path);
+                    const insertedIds = await LedgerModel.addRecords(ledgerId, fileId, invoiceRecords);
+                    fileResult.records = invoiceRecords.map((record, i) => ({
+                        recordId: insertedIds[i],
+                        ...record
+                    }));
+                    console.log(`[Ledger] Parsed ${invoiceRecords.length} record(s) from ${file.originalname}`);
+                } catch (parseError) {
+                    console.error(`[Ledger] Failed to parse ${file.originalname}:`, parseError);
+                    fileResult.parseError = 'PDF parsing failed, file was saved but records could not be extracted';
+                }
+            }
+
+            savedFiles.push(fileResult);
         }
+
+        const totalRecords = savedFiles.reduce((sum, f) => sum + f.records.length, 0);
 
         res.status(201).json({
             success: true,
-            message: `${savedFiles.length} file(s) uploaded successfully`,
+            message: `${savedFiles.length} file(s) uploaded, ${totalRecords} record(s) extracted`,
             files: savedFiles
         });
 
@@ -148,6 +171,17 @@ const getLedgerFiles = async (req, res) => {
         res.status(200).json({ success: true, data: files });
     } catch (error) {
         console.error('Error fetching ledger files:', error);
+        res.status(500).json({ success: false, message: 'Server error' });
+    }
+};
+
+// ─── GET /api/v1/ledger/:id/records ──────────────────────────────────────────
+const getLedgerRecords = async (req, res) => {
+    try {
+        const records = await LedgerModel.getRecords(req.params.id);
+        res.status(200).json({ success: true, data: records });
+    } catch (error) {
+        console.error('Error fetching ledger records:', error);
         res.status(500).json({ success: false, message: 'Server error' });
     }
 };
@@ -199,5 +233,6 @@ module.exports = {
     createLedger,
     uploadLedgerFiles,
     getLedgerFiles,
+    getLedgerRecords,
     deleteLedger
 };

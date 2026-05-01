@@ -1,23 +1,12 @@
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import useAuthStore from "../../../../store/useAuthStore";
 import "./LedgerDetails.css";
 
-const initialMockTransactions = {
-    1: [
-        { id: 't1', transactionId: 'TXN-001', reconciled: 'Yes', date: '2026-04-10', debit: '1500.00', credit: '', description: 'Client Payment - Acme Corp', fileName: 'inv-acme-01.pdf' },
-        { id: 't2', transactionId: 'TXN-002', reconciled: 'No', date: '2026-04-11', debit: '', credit: '250.00', description: 'Office Supplies', fileName: 'receipt-staples.pdf' },
-    ],
-    2: [
-        { id: 't3', transactionId: 'TXN-003', reconciled: 'Yes', date: '2026-03-15', debit: '5000.00', credit: '', description: 'Q1 Ad Spend Allocation', fileName: null },
-    ],
-    3: []
-};
-
-
 export function LedgerDetails() {
     const { id } = useParams();
-    const [transactions, setTransactions] = useState(initialMockTransactions[id] || []);
+    const [transactions, setTransactions] = useState([]);
+    const [loading, setLoading] = useState(true);
     const token = useAuthStore((state) => state.token);
     const fileInputRef = useRef(null);
     const [showAddEntryModal, setShowAddEntryModal] = useState(false);
@@ -25,6 +14,42 @@ export function LedgerDetails() {
     const [uploading, setUploading] = useState(false);
     const [error, setError] = useState("");
     const API = "http://localhost:8085/api/v1";
+
+    useEffect(() => {
+        const fetchRecords = async () => {
+            if (!token) return;
+            try {
+                setLoading(true);
+                const response = await fetch(`${API}/ledger/${id}/records`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
+                const data = await response.json();
+                if (data.success) {
+                    const formatted = data.data.map(record => ({
+                        id: record.id,
+                        transactionId: record.transaction_id || '',
+                        reconciled: record.is_reconciled ? 'Yes' : 'No',
+                        date: record.transaction_date ? new Date(record.transaction_date).toISOString().split('T')[0] : '',
+                        debit: record.transaction_type === 'debit' ? record.amount : '',
+                        credit: record.transaction_type === 'credit' ? record.amount : '',
+                        description: record.description || '',
+                        fileName: record.file_path ? record.file_path.split(/[\\/]/).pop() : ''
+                    }));
+                    setTransactions(formatted);
+                } else {
+                    setError("Failed to fetch ledger records");
+                }
+            } catch (err) {
+                console.error(err);
+                setError("Error fetching ledger records");
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchRecords();
+    }, [id, token]);
 
     const handleTransactionUpdate = (id, field, value) => {
         setTransactions(prev => prev.map(txn =>
@@ -115,17 +140,35 @@ export function LedgerDetails() {
                 throw new Error(data.message || "Failed to upload invoices");
             }
 
-            const generatedRows = files.map((file, index) => ({
-                id: `${Date.now()}-${index}`,
-                transactionId: '',
-                reconciled: 'No',
-                date: '',
-                debit: '',
-                credit: '',
-                description: '',
-                fileName: file.name
-            }));
-            setTransactions((prev) => [...prev, ...generatedRows]);
+            const newRows = [];
+            data.files.forEach(fileData => {
+                if (fileData.records && fileData.records.length > 0) {
+                    fileData.records.forEach(record => {
+                        newRows.push({
+                            id: record.recordId || `${Date.now()}-${Math.random()}`,
+                            transactionId: record.transaction_id || '',
+                            reconciled: 'No',
+                            date: record.transaction_date ? new Date(record.transaction_date).toISOString().split('T')[0] : '',
+                            debit: record.transaction_type === 'debit' ? record.amount : '',
+                            credit: record.transaction_type === 'credit' ? record.amount : '',
+                            description: record.description || '',
+                            fileName: fileData.originalName
+                        });
+                    });
+                } else {
+                    newRows.push({
+                        id: `${Date.now()}-${Math.random()}`,
+                        transactionId: '',
+                        reconciled: 'No',
+                        date: '',
+                        debit: '',
+                        credit: '',
+                        description: '',
+                        fileName: fileData.originalName
+                    });
+                }
+            });
+            setTransactions((prev) => [...prev, ...newRows]);
             closeAddEntryModal();
         } catch (uploadError) {
             setError(uploadError.message || "Could not upload invoices.");
@@ -147,8 +190,10 @@ export function LedgerDetails() {
         <>
             <div className="transactions-view">
                 <div className="ledger-table-container">
-                    <table className="ledger-table">
-                        <thead>
+                    {loading && <p style={{ textAlign: 'center', padding: '20px' }}>Loading records...</p>}
+                    {!loading && (
+                        <table className="ledger-table">
+                            <thead>
                             <tr>
                                 <th style={{ width: '50px' }}>#</th>
                                 <th>Transaction ID</th>
@@ -230,6 +275,7 @@ export function LedgerDetails() {
                             ))}
                         </tbody>
                     </table>
+                    )}
                 </div>
                 <button className="add-row-btn" onClick={() => setShowAddEntryModal(true)}>
                     {/* <Plus size={18} />  */}

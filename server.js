@@ -13,7 +13,6 @@ const initSchema = require('./config/initSchema');
 
 const ledgerRoute = require('./routes/ledgerRoute');
 
-const { parsePdf } = require('./parsing/parser');
 
 const app = express();
 
@@ -44,11 +43,6 @@ const startServer = async () => {
         app.listen(PORT, () => {
             console.log(`Server is running on port ${PORT}`);
         });
-
-
-        parsePdf("users/Desai_Brothers_Sales_Invoices_v1.pdf");
-
-
 
     } catch (error) {
         console.error("Failed to start server:", error);
