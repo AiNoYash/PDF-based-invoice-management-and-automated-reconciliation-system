@@ -1,9 +1,6 @@
 const fs = require('fs');
 const pdfParse = require('pdf-parse');
 const db = require('../config/db');
-<<<<<<< HEAD
-const { getClassifier } = require('../classifier');
-=======
 const { PDFParse } = require('pdf-parse');
 
 
@@ -55,7 +52,6 @@ const parseInvoiceText = (text) => {
 
     return { transaction_id, transaction_date, amount, description, transaction_type };
 };
->>>>>>> de837a7273b846dac8777024e390ec5301c79a06
 
 const uploadInvoice = async (req, res) => {
     try {
@@ -68,13 +64,8 @@ const uploadInvoice = async (req, res) => {
         const filePath = req.file.path;
         const dataBuffer = fs.readFileSync(filePath);
 
-<<<<<<< HEAD
-        const pdfParse = getPdfParser();
-        const data = await pdfParse(dataBuffer);
-=======
         const pdfParse = new PDFParse({ dataBuffer });
         const data = await pdfParse.getText();
->>>>>>> de837a7273b846dac8777024e390ec5301c79a06
         const text = data.text;
 
         const parsedData = parseInvoiceText(text);

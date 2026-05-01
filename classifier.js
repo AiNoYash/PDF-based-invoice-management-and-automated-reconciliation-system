@@ -166,7 +166,6 @@ const trainingData = [
             'ID', 'ID:', 'ID No', 'ID Number',
             'Ref', 'Ref.', 'Ref:', 'Ref No.', 'Ref. No.',
             'S.No', 'Sr No', 'Sr. No.', 'Sl No', 'Sl. No.',
-            'Code', 'Code No', 'Code:'
         ]
     },
 
@@ -357,215 +356,30 @@ const trainingData = [
     },
 
     {
-        label: 'transaction_type_anchor',
+        label: 'transaction_type_anchor_credit',
         phrases: [
-            // --- Existing ---
-            'Transaction Type', 'Payment Type', 'Type', 'Account Type',
-            'Method of Payment', 'Payment Method', 'Paid By', 'Remittance Method',
-            'Credit', 'Debit', 'Refund', 'Charge', 'Payment Terms', 'Terms', 'Status',
-            'Cash', 'Card', 'Credit Card', 'Debit Card', 'UPI', 'Net Banking',
-            'Bank Transfer', 'Wallet', 'Cheque', 'NEFT', 'RTGS', 'IMPS',
-            'Paid', 'Pending', 'Completed', 'Cancelled', 'Failed', 'Success',
-            'Purchase', 'Sale', 'Expense', 'Income', 'Subscription',
-            'Withdrawal', 'Deposit', 'Transfer',
 
-            // --- Extended Payment Methods ---
-            'Mode of Payment', 'Mode', 'Payment Mode',
-            'Payment Channel', 'Channel',
-            'Cash Payment', 'Online Payment', 'Digital Payment',
-            'Mobile Payment', 'Contactless Payment', 'Tap to Pay',
-            'Credit Card Payment', 'Debit Card Payment',
-            'Visa', 'Mastercard', 'RuPay', 'Amex', 'American Express',
-            'Maestro', 'Diner\'s Club', 'Discover',
-            'UPI Payment', 'UPI Transfer', 'BHIM UPI',
-            'Google Pay', 'GPay', 'PhonePe', 'Paytm',
-            'Amazon Pay', 'WhatsApp Pay', 'Samsung Pay', 'Apple Pay',
-            'NEFT Transfer', 'RTGS Transfer', 'IMPS Transfer',
-            'Net Banking', 'Internet Banking', 'Online Banking',
-            'Bank Draft', 'Demand Draft', 'DD',
-            'Pay Order', 'Banker\'s Cheque',
-            'Mobile Banking', 'Mobile Wallet',
-            'Paytm Wallet', 'Mobikwik', 'Freecharge', 'Ola Money',
-            'Prepaid Card', 'Gift Card', 'Store Credit',
-            'EMI', 'EMI Payment', 'No Cost EMI',
-            'Buy Now Pay Later', 'BNPL', 'ZestMoney', 'Simpl', 'LazyPay',
-            'Cash on Delivery', 'COD',
-            'Crypto', 'Cryptocurrency', 'Bitcoin', 'USDT',
-            'Barter', 'Exchange',
+        ]
+    },
+ 
+    {
+        label: 'transaction_type_anchor_debit',
+        phrases: [
 
-            // --- Transaction Category / Nature ---
-            'Transaction Category', 'Category', 'Nature of Transaction',
-            'Nature of Payment', 'Payment Nature',
-            'Type of Service', 'Service Type', 'Type of Supply',
-            'Nature of Supply', 'Supply Type',
-            'B2B', 'B2C', 'B2G',
-            'Inward Supply', 'Outward Supply',
-            'Import', 'Export', 'Domestic', 'Interstate', 'Intrastate',
-
-            // --- Business Transaction Types ---
-            'Sales', 'Purchase', 'Return', 'Sales Return', 'Purchase Return',
-            'Exchange', 'Replacement', 'Repair',
-            'Rental', 'Lease', 'Hire',
-            'Service', 'Consultancy', 'Professional Fee',
-            'Advance', 'Prepayment', 'Part Payment', 'Full Payment',
-            'Final Payment', 'Settlement',
-            'Reimbursement', 'Expense Claim',
-            'Commission', 'Brokerage',
-            'Loan Repayment', 'EMI Payment', 'Principal', 'Interest',
-            'Dividend', 'Investment',
-
-            // --- Invoice / Document Type ---
-            'Invoice Type', 'Bill Type', 'Document Type',
-            'Tax Invoice', 'Proforma Invoice', 'Quotation',
-            'Credit Note', 'Debit Note',
-            'Receipt', 'Cash Receipt', 'Payment Receipt',
-            'Estimate', 'Purchase Order', 'Work Order',
-            'Delivery Note', 'Dispatch Note',
-
-            // --- Transaction Status (Extended) ---
-            'Payment Status', 'Order Status', 'Status',
-            'Approved', 'Declined', 'Rejected', 'Reversed',
-            'Processing', 'In Progress', 'Under Review',
-            'Partially Paid', 'Partially Refunded',
-            'Overdue', 'Unpaid', 'Settled', 'Cleared',
-            'On Hold', 'Disputed', 'Chargeback',
-            'Initiated', 'Authorized', 'Captured',
-            'Expired', 'Void', 'Voided',
-            'Sent', 'Received', 'Acknowledged',
-
-            // --- Accounting Classification ---
-            'Debit Entry', 'Credit Entry', 'Journal Entry',
-            'Opening Entry', 'Closing Entry', 'Contra',
-            'Asset', 'Liability', 'Equity', 'Revenue', 'Expense',
-            'Capital', 'Drawings',
-
-            // --- Tax / Compliance ---
-            'Taxable', 'Exempt', 'Zero Rated', 'Nil Rated',
-            'RCM', 'Reverse Charge', 'Reverse Charge Mechanism',
-            'Composition', 'Regular',
-            'With GST', 'Without GST', 'GST Applicable', 'GST Exempt'
         ]
     },
 
     {
         label: 'description_anchor',
         phrases: [
-            // --- Existing ---
-            'Description', 'Particulars', 'Item', 'Items', 'Line Item',
-            'Product', 'Service', 'Details', 'Qty', 'Quantity',
-            'Description of Services', 'Description of Goods', 'Summary',
-            'Notes', 'Memo', 'For', 'Regarding', 'Remarks',
-            'Item Description', 'Product Name', 'Service Name',
-            'Item Name', 'Product Details',
-            'Unit Price', 'Rate', 'Amount', 'Units',
-            'HSN Code', 'SKU', 'Serial No',
-            'Narration', 'Purpose', 'Payment For',
-            'Transaction Details', 'Merchant Name',
-            'Comments', 'Additional Notes', 'Explanation', 'Reason', 'Reference',
 
-            // --- Product / Item Fields ---
-            'Item Code', 'Item No', 'Item #', 'Item ID',
-            'Product Code', 'Product ID', 'Product No', 'Part No', 'Part Number',
-            'Part Code', 'Catalogue No', 'Cat No',
-            'SKU Code', 'SKU Number', 'Barcode', 'EAN', 'UPC',
-            'Batch No', 'Batch Number', 'Lot No', 'Lot Number',
-            'Serial Number', 'Serial No', 'Sr. No.',
-            'Model No', 'Model Number', 'Model Name',
-            'Brand', 'Make', 'Manufacturer',
-            'Variant', 'Size', 'Color', 'Colour', 'Specification', 'Spec',
-            'Category', 'Sub Category', 'Type', 'Class',
-            'HSN/SAC', 'SAC Code', 'HS Code', 'Tariff Code',
-
-            // --- Quantity / Unit Fields ---
-            'Qty.', 'Qtty', 'Nos', 'No. of Units', 'No. of Items',
-            'Number of Pieces', 'Pcs', 'Pieces',
-            'Unit', 'Unit of Measure', 'UOM', 'UOM Code',
-            'Box', 'Carton', 'Pack', 'Bundle', 'Set', 'Pair',
-            'Kg', 'Grams', 'Litre', 'ML', 'Meter', 'Sq. Ft.',
-
-            // --- Pricing Fields (in table rows) ---
-            'Unit Cost', 'Cost Per Unit', 'Price Per Item',
-            'List Price', 'MRP', 'Selling Price', 'Offer Price',
-            'Discount %', 'Discount Rate', 'Disc %', 'Disc.',
-            'Tax %', 'GST %', 'CGST %', 'SGST %', 'IGST %',
-            'Tax Rate', 'Tax Code',
-            'Taxable Value', 'Tax Amount', 'Total Tax',
-
-            // --- Service Fields ---
-            'Service Description', 'Service Details',
-            'Description of Work', 'Nature of Work', 'Work Description',
-            'Scope of Work', 'Work Done', 'Services Rendered',
-            'Professional Services', 'Consultancy Services',
-            'Subscription Plan', 'Plan Name', 'Package Name', 'Plan Details',
-            'Membership', 'Membership Type', 'Membership Plan',
-
-            // --- Banking / Payment Narration ---
-            'Transaction Narration', 'Payment Narration',
-            'Transfer Narration', 'Credit Narration', 'Debit Narration',
-            'Bank Memo', 'Bank Remarks',
-            'Remittance Remarks', 'Wire Transfer Remarks',
-            'Purpose of Transfer', 'Purpose of Payment', 'Purpose Code',
-            'Beneficiary Name', 'Beneficiary Details',
-            'Remitter Name', 'Sender Name',
-            'Particulars of Payment', 'Payment Particulars',
-            'Account Description',
-
-            // --- E-Commerce Order Lines ---
-            'Order Item', 'Cart Item', 'Product Item',
-            'Order Line', 'Line Description',
-            'Seller Name', 'Vendor Name', 'Merchant',
-            'Store Name', 'Shop Name',
-            'Variant Detail', 'Product Variant',
-            'Fulfillment Details', 'Shipping Details',
-
-            // --- Invoice Table Headers ---
-            'S.No.', 'Sl. No.', 'Sr. No.', '#',
-            'No.', 'Item No.', 'Product No.',
-            'Name', 'Title', 'Label',
-            'Total Amount', 'Net Amount', 'Gross Amount', 'Line Total',
-
-            // --- General Notes / Memo Fields ---
-            'Subject', 'Re:', 'Note', 'Footnote', 'Terms & Conditions',
-            'Special Instructions', 'Instructions', 'Delivery Instructions',
-            'Internal Notes', 'External Notes', 'Customer Notes', 'Vendor Notes',
-            'Bill Description', 'Account Description', 'Ledger Name',
-            'GL Code', 'Cost Centre', 'Cost Center', 'Department',
-            'Project Name', 'Project Code', 'Job Code', 'Job Description',
-            'Contract Description',
-
-            // --- Payment / Transaction Description ---
-            'Payment Description', 'Charge Description',
-            'Fee Description', 'Tax Description',
-            'Refund Reason', 'Return Reason', 'Cancellation Reason',
-            'Adjustment Remarks', 'Dispute Remarks',
-            'Billing Description',
-
-            // --- Miscellaneous / OCR Variants ---
-            'Goods', 'Merchandise', 'Materials',
-            'Labour', 'Labor', 'Man Hours',
-            'Consumables', 'Spares', 'Accessories',
-            'Raw Material', 'Finished Goods', 'Semi-Finished',
-            'Assets', 'Equipment', 'Machinery',
-            'Stationery', 'Office Supplies',
-            'Software', 'License', 'Subscription',
-            'Maintenance', 'Repairs', 'AMC',
-            'Freight', 'Transport', 'Courier',
-            'Food', 'Beverage', 'Catering',
-            'Fuel', 'Petrol', 'Diesel', 'Gas',
-            'Electricity', 'Water', 'Utilities',
-            'Rent', 'Lease', 'Hire Charges',
-            'Advertisement', 'Marketing', 'Promotional',
-            'Training', 'Course', 'Workshop', 'Seminar',
-            'Travel', 'Hotel', 'Accommodation', 'Airfare',
-            'Medical', 'Pharmacy', 'Hospital Charges',
-            'Insurance', 'Premium'
         ]
     }
 ];
 
 function trainAndSave() {
     const classifier = new natural.BayesClassifier();
-    
+
     trainingData.forEach(category => {
         category.phrases.forEach(phrase => {
             classifier.addDocument(phrase, category.label);
@@ -574,10 +388,11 @@ function trainAndSave() {
 
     classifier.train();
     saveClassifier();
-    
-    console.log("Training complete. Documents added dynamically!");
+
 }
 
+
+trainAndSave();
 
 module.exports = {
     getClassifier,
