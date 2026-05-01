@@ -13,7 +13,7 @@ export function CreateReconcilationsModel({ isOpen, onClose }) {
   const [statementGroups, setStatementGroups] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  
+
   const token = useAuthStore(state => state.token);
 
   useEffect(() => {
@@ -26,7 +26,7 @@ export function CreateReconcilationsModel({ isOpen, onClose }) {
     try {
       setLoading(true);
       setError('');
-      
+
       const [ledgersRes, statementsRes] = await Promise.all([
         axios.get('http://localhost:8085/api/v1/ledger', {
           headers: { Authorization: `Bearer ${token}` }
@@ -35,10 +35,10 @@ export function CreateReconcilationsModel({ isOpen, onClose }) {
           headers: { Authorization: `Bearer ${token}` }
         })
       ]);
-      
+
       setLedgers(ledgersRes.data.data || []);
       setStatementGroups(statementsRes.data.groups || []);
-      
+
     } catch (err) {
       console.error("Failed to fetch data:", err);
       setError('Failed to load ledgers or statement groups.');
@@ -52,22 +52,22 @@ export function CreateReconcilationsModel({ isOpen, onClose }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log("Submitting Object:", formData);
-    onClose(); 
+    onClose();
   };
 
   const handleLedgerChange = (e) => {
     const newLedgerId = e.target.value;
     const selectedL = ledgers.find(l => l.id.toString() === newLedgerId);
-    
+
     let matchingGroupId = '';
-    
+
     if (selectedL) {
-      const matchingGroup = statementGroups.find(group => 
-        String(group.bankAccountId) === String(selectedL.bankAccountId) && 
-        String(group.month) === String(selectedL.targetMonth) && 
+      const matchingGroup = statementGroups.find(group =>
+        String(group.bankAccountId) === String(selectedL.bankAccountId) &&
+        String(group.month) === String(selectedL.targetMonth) &&
         String(group.year) === String(selectedL.targetYear)
       );
-      
+
       if (matchingGroup) {
         matchingGroupId = matchingGroup.id.toString();
       }
@@ -81,28 +81,28 @@ export function CreateReconcilationsModel({ isOpen, onClose }) {
   };
 
   const selectedLedger = ledgers.find(l => l.id.toString() === formData.ledgerId);
-  
-  const filteredStatementGroups = selectedLedger 
-    ? statementGroups.filter(group => 
-        String(group.bankAccountId) === String(selectedLedger.bankAccountId) && 
-        String(group.month) === String(selectedLedger.targetMonth) && 
-        String(group.year) === String(selectedLedger.targetYear)
-      )
+
+  const filteredStatementGroups = selectedLedger
+    ? statementGroups.filter(group =>
+      String(group.bankAccountId) === String(selectedLedger.bankAccountId) &&
+      String(group.month) === String(selectedLedger.targetMonth) &&
+      String(group.year) === String(selectedLedger.targetYear)
+    )
     : statementGroups;
 
   return (
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-card" onClick={(e) => e.stopPropagation()}>
-        
+
         <div className="modal-header">
           <h2>Select Ledger and Group</h2>
           <button className="btn-close" onClick={onClose}>&times;</button>
         </div>
 
         <form className="modal-form" onSubmit={handleSubmit}>
-          
+
           {error && <div style={{ color: 'red', marginBottom: '10px' }}>{error}</div>}
-          
+
           <div className="form-group">
             <label>Select Ledger</label>
             <select

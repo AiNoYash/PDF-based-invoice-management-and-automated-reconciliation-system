@@ -51,19 +51,19 @@ export function CreateBankStatementGroupModal({ isOpen, onClose, onUploadSuccess
   const handleFileChange = (e) => {
     const selectedFiles = Array.from(e.target.files);
     const csvFiles = selectedFiles.filter(file => file.type === 'text/csv' || file.name.endsWith('.csv'));
-    
+
     if (csvFiles.length !== selectedFiles.length) {
       setError('Only CSV files are allowed');
     } else {
       setError('');
     }
-    
+
     setFiles(csvFiles);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (!files.length) {
       setError('Please select at least one CSV file');
       return;
@@ -93,7 +93,7 @@ export function CreateBankStatementGroupModal({ isOpen, onClose, onUploadSuccess
       });
 
       console.log('Upload successful:', response.data);
-      
+
       // Notify parent component of successful upload
       if (onUploadSuccess) {
         onUploadSuccess(response.data.bankStatementGroup);
@@ -120,14 +120,14 @@ export function CreateBankStatementGroupModal({ isOpen, onClose, onUploadSuccess
   return (
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-card" onClick={(e) => e.stopPropagation()}>
-        
+
         <div className="modal-header">
           <h2>Create New Statement Group</h2>
           <button className="btn-close" onClick={onClose} disabled={loading}>&times;</button>
         </div>
 
         <form className="modal-form" onSubmit={handleSubmit}>
-          
+
           {error && <div className="error-message">{error}</div>}
 
           <div className="form-group">
@@ -154,7 +154,7 @@ export function CreateBankStatementGroupModal({ isOpen, onClose, onUploadSuccess
                 {months.map(m => <option key={m} value={m}>{m}</option>)}
               </select>
             </div>
-            
+
             <div className="form-group flex-1">
               <label>Year</label>
               <select

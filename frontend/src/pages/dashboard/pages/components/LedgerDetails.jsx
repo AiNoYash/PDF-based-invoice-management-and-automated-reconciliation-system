@@ -15,27 +15,28 @@ export function LedgerDetails() {
     const [error, setError] = useState("");
     const API = "http://localhost:8085/api/v1";
 
+    /* ── Fetch records ── */
     useEffect(() => {
         const fetchRecords = async () => {
             if (!token) return;
             try {
                 setLoading(true);
                 const response = await fetch(`${API}/ledger/${id}/records`, {
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    }
+                    headers: { Authorization: `Bearer ${token}` }
                 });
                 const data = await response.json();
                 if (data.success) {
                     const formatted = data.data.map(record => ({
-                        id: record.id,
+                        id:            record.id,
                         transactionId: record.transaction_id || '',
-                        reconciled: record.is_reconciled ? 'Yes' : 'No',
-                        date: record.transaction_date ? new Date(record.transaction_date).toISOString().split('T')[0] : '',
-                        debit: record.transaction_type === 'debit' ? record.amount : '',
-                        credit: record.transaction_type === 'credit' ? record.amount : '',
-                        description: record.description || '',
-                        fileName: record.file_path ? record.file_path.split(/[\\/]/).pop() : ''
+                        reconciled:    record.is_reconciled ? 'Yes' : 'No',
+                        date:          record.transaction_date
+                                           ? new Date(record.transaction_date).toISOString().split('T')[0]
+                                           : '',
+                        debit:         record.transaction_type === 'debit'  ? record.amount : '',
+                        credit:        record.transaction_type === 'credit' ? record.amount : '',
+                        description:   record.description || '',
+                        fileName:      record.file_path ? record.file_path.split(/[\\\/]/).pop() : ''
                     }));
                     setTransactions(formatted);
                 } else {
@@ -51,26 +52,42 @@ export function LedgerDetails() {
         fetchRecords();
     }, [id, token]);
 
-    const handleTransactionUpdate = (id, field, value) => {
-        setTransactions(prev => prev.map(txn =>
-            txn.id === id ? { ...txn, [field]: value } : txn
-        ));
+    /* ── handleTransactionUpdate — sync edit back to API ── */
+    const handleTransactionUpdate = async (recordId, field, value) => {
+        setTransactions(prev =>
+            prev.map(txn => txn.id === recordId ? { ...txn, [field]: value } : txn)
+        );
+        if (!token) return;
+        try {
+            await fetch(`${API}/ledger/record/${recordId}`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`
+                },
+                body: JSON.stringify({ field, value })
+            });
+        } catch (err) {
+            console.error("Failed to sync transaction update", err);
+        }
     };
 
+    /* ── handleAddRow — insert blank editable row ── */
     const handleAddRow = () => {
         const newRow = {
-            id: Date.now().toString(),
+            id:            Date.now().toString(),
             transactionId: '',
-            reconciled: 'No',
-            date: '',
-            debit: '',
-            credit: '',
-            description: '',
-            fileName: ''
+            reconciled:    'No',
+            date:          '',
+            debit:         '',
+            credit:        '',
+            description:   '',
+            fileName:      ''
         };
-        setTransactions([...transactions, newRow]);
+        setTransactions(prev => [...prev, newRow]);
     };
 
+    /* ── Modal helpers ── */
     const closeAddEntryModal = () => {
         setShowAddEntryModal(false);
         setFiles([]);
@@ -78,6 +95,7 @@ export function LedgerDetails() {
         setUploading(false);
     };
 
+    /* ── handleManualEntry — add blank row & close modal ── */
     const handleManualEntry = () => {
         handleAddRow();
         closeAddEntryModal();
@@ -85,90 +103,74 @@ export function LedgerDetails() {
 
     const handleFileChange = (e) => {
         const selected = Array.from(e.target.files || []);
-        setFiles((prev) => {
-            const existing = prev.map((file) => file.name);
-            const freshFiles = selected.filter((file) => !existing.includes(file.name));
-            return [...prev, ...freshFiles];
+        setFiles(prev => {
+            const existing = prev.map(f => f.name);
+            return [...prev, ...selected.filter(f => !existing.includes(f.name))];
         });
         e.target.value = "";
     };
 
     const handleDrop = (e) => {
         e.preventDefault();
-        const droppedFiles = Array.from(e.dataTransfer.files || []);
-        setFiles((prev) => {
-            const existing = prev.map((file) => file.name);
-            const freshFiles = droppedFiles.filter((file) => !existing.includes(file.name));
-            return [...prev, ...freshFiles];
+        const dropped = Array.from(e.dataTransfer.files || []);
+        setFiles(prev => {
+            const existing = prev.map(f => f.name);
+            return [...prev, ...dropped.filter(f => !existing.includes(f.name))];
         });
     };
 
-    const handleDragOver = (e) => e.preventDefault();
-
-    const removeFile = (index) => {
-        setFiles((prev) => prev.filter((_, fileIndex) => fileIndex !== index));
-    };
+    const removeFile = (index) =>
+        setFiles(prev => prev.filter((_, i) => i !== index));
 
     const handleUploadInvoices = async () => {
-        if (files.length === 0) {
-            setError("Please select at least one invoice file.");
-            return;
-        }
-
-        if (!token) {
-            setError("Authentication token missing. Please login again.");
-            return;
-        }
+        if (files.length === 0) { setError("Please select at least one invoice file."); return; }
+        if (!token)             { setError("Authentication token missing. Please login again."); return; }
 
         setUploading(true);
         setError("");
-
         try {
             const formPayload = new FormData();
-            files.forEach((file) => formPayload.append("files", file));
+            files.forEach(file => formPayload.append("files", file));
 
             const response = await fetch(`${API}/ledger/${id}/files`, {
                 method: "POST",
-                headers: {
-                    Authorization: `Bearer ${token}`
-                },
+                headers: { Authorization: `Bearer ${token}` },
                 body: formPayload
             });
-
             const data = await response.json();
-            if (!response.ok || !data.success) {
-                throw new Error(data.message || "Failed to upload invoices");
-            }
+            if (!response.ok || !data.success) throw new Error(data.message || "Failed to upload invoices");
 
             const newRows = [];
             data.files.forEach(fileData => {
                 if (fileData.records && fileData.records.length > 0) {
                     fileData.records.forEach(record => {
                         newRows.push({
-                            id: record.recordId || `${Date.now()}-${Math.random()}`,
+                            id:            record.recordId || `${Date.now()}-${Math.random()}`,
                             transactionId: record.transaction_id || '',
-                            reconciled: 'No',
-                            date: record.transaction_date ? new Date(record.transaction_date).toISOString().split('T')[0] : '',
-                            debit: record.transaction_type === 'debit' ? record.amount : '',
-                            credit: record.transaction_type === 'credit' ? record.amount : '',
-                            description: record.description || '',
-                            fileName: fileData.originalName
+                            reconciled:    'No',
+                            date:          record.transaction_date
+                                               ? new Date(record.transaction_date).toISOString().split('T')[0]
+                                               : '',
+                            debit:         record.transaction_type === 'debit'  ? record.amount : '',
+                            credit:        record.transaction_type === 'credit' ? record.amount : '',
+                            description:   record.description || '',
+                            fileName:      fileData.originalName
                         });
                     });
                 } else {
                     newRows.push({
-                        id: `${Date.now()}-${Math.random()}`,
+                        id:            `${Date.now()}-${Math.random()}`,
                         transactionId: '',
-                        reconciled: 'No',
-                        date: '',
-                        debit: '',
-                        credit: '',
-                        description: '',
-                        fileName: fileData.originalName
+                        reconciled:    'No',
+                        date:          '',
+                        debit:         '',
+                        credit:        '',
+                        description:   '',
+                        fileName:      fileData.originalName
                     });
                 }
             });
-            setTransactions((prev) => [...prev, ...newRows]);
+            setTransactions(prev => [...prev, ...newRows]);
             closeAddEntryModal();
         } catch (uploadError) {
             setError(uploadError.message || "Could not upload invoices.");
@@ -178,114 +180,138 @@ export function LedgerDetails() {
     };
 
     const getFileIcon = (name) => {
-        const extension = name.split(".").pop()?.toLowerCase();
-        if (extension === "pdf") return "📄";
-        if (["xls", "xlsx"].includes(extension)) return "📊";
-        if (extension === "csv") return "📋";
-        return "📁";
+        const ext = name.split('.').pop()?.toLowerCase();
+        if (ext === 'pdf')                return '📄';
+        if (['xls','xlsx'].includes(ext)) return '📊';
+        if (ext === 'csv')                return '📋';
+        return '📁';
     };
 
-
+    /* ── Render ── */
     return (
         <>
             <div className="transactions-view">
                 <div className="ledger-table-container">
-                    {loading && <p style={{ textAlign: 'center', padding: '20px' }}>Loading records...</p>}
+                    {loading && (
+                        <p style={{ textAlign: 'center', padding: '20px' }}>Loading records...</p>
+                    )}
                     {!loading && (
                         <table className="ledger-table">
                             <thead>
-                            <tr>
-                                <th style={{ width: '50px' }}>#</th>
-                                <th>Transaction ID</th>
-                                <th style={{ width: '120px' }}>Reconciled</th>
-                                <th style={{ width: '150px' }}>Date</th>
-                                <th style={{ width: '120px' }}>Debit</th>
-                                <th style={{ width: '120px' }}>Credit</th>
-                                <th>Description</th>
-                                <th>File Name</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {transactions.map((txn, index) => (
-                                <tr key={txn.id}>
-                                    <td>{index + 1}</td>
-                                    <td className="editable-cell">
-                                        <input
-                                            className="editable-input"
-                                            type="text"
-                                            defaultValue={txn.transactionId}
-                                            onBlur={(e) => handleTransactionUpdate(txn.id, 'transactionId', e.target.value)}
-                                        />
-                                    </td>
-                                    <td className="editable-cell">
-                                        <select
-                                            className="editable-input"
-                                            defaultValue={txn.reconciled}
-                                            onBlur={(e) => handleTransactionUpdate(txn.id, 'reconciled', e.target.value)}
-                                        >
-                                            <option value="Yes">Yes</option>
-                                            <option value="No">No</option>
-                                        </select>
-                                    </td>
-                                    <td className="editable-cell">
-                                        <input
-                                            className="editable-input"
-                                            type="date"
-                                            defaultValue={txn.date}
-                                            onBlur={(e) => handleTransactionUpdate(txn.id, 'date', e.target.value)}
-                                        />
-                                    </td>
-                                    <td className="editable-cell">
-                                        <input
-                                            className="editable-input"
-                                            type="number"
-                                            placeholder="0.00"
-                                            defaultValue={txn.debit}
-                                            onBlur={(e) => handleTransactionUpdate(txn.id, 'debit', e.target.value)}
-                                        />
-                                    </td>
-                                    <td className="editable-cell">
-                                        <input
-                                            className="editable-input"
-                                            type="number"
-                                            placeholder="0.00"
-                                            defaultValue={txn.credit}
-                                            onBlur={(e) => handleTransactionUpdate(txn.id, 'credit', e.target.value)}
-                                        />
-                                    </td>
-                                    <td className="editable-cell">
-                                        <input
-                                            className="editable-input"
-                                            type="text"
-                                            placeholder="Enter description..."
-                                            defaultValue={txn.description}
-                                            onBlur={(e) => handleTransactionUpdate(txn.id, 'description', e.target.value)}
-                                        />
-                                    </td>
-                                    <td className="editable-cell">
-                                        <input
-                                            className="editable-input"
-                                            type="text"
-                                            placeholder="Optional file..."
-                                            defaultValue={txn.fileName || ''}
-                                            onBlur={(e) => handleTransactionUpdate(txn.id, 'fileName', e.target.value)}
-                                        />
-                                    </td>
+                                <tr>
+                                    <th style={{ width: '50px'  }}>#</th>
+                                    <th>Transaction ID</th>
+                                    <th style={{ width: '120px' }}>Reconciled</th>
+                                    <th style={{ width: '150px' }}>Date</th>
+                                    <th style={{ width: '120px' }}>Debit</th>
+                                    <th style={{ width: '120px' }}>Credit</th>
+                                    <th>Description</th>
+                                    <th>File Name</th>
                                 </tr>
-                            ))}
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                                {transactions.length === 0 ? (
+                                    <tr>
+                                        <td colSpan={8} style={{ textAlign: 'center', padding: '32px', color: '#94a3b8' }}>
+                                            No records found. Add a new entry or upload an invoice.
+                                        </td>
+                                    </tr>
+                                ) : transactions.map((txn, index) => (
+                                    <tr key={txn.id}>
+                                        <td>{index + 1}</td>
+
+                                        {/* Transaction ID — editable input */}
+                                        <td className="editable-cell">
+                                            <input
+                                                className="editable-input"
+                                                type="text"
+                                                defaultValue={txn.transactionId}
+                                                onBlur={e => handleTransactionUpdate(txn.id, 'transactionId', e.target.value)}
+                                            />
+                                        </td>
+
+                                        {/* Reconciled — editable select */}
+                                        <td className="editable-cell">
+                                            <select
+                                                className="editable-input"
+                                                defaultValue={txn.reconciled}
+                                                onChange={e => handleTransactionUpdate(txn.id, 'reconciled', e.target.value)}
+                                            >
+                                                <option value="Yes">Yes</option>
+                                                <option value="No">No</option>
+                                            </select>
+                                        </td>
+
+                                        {/* Date — editable date picker */}
+                                        <td className="editable-cell">
+                                            <input
+                                                className="editable-input"
+                                                type="date"
+                                                defaultValue={txn.date}
+                                                onBlur={e => handleTransactionUpdate(txn.id, 'date', e.target.value)}
+                                            />
+                                        </td>
+
+                                        {/* Debit — editable number */}
+                                        <td className="editable-cell">
+                                            <input
+                                                className="editable-input"
+                                                type="number"
+                                                placeholder="0.00"
+                                                defaultValue={txn.debit}
+                                                onBlur={e => handleTransactionUpdate(txn.id, 'debit', e.target.value)}
+                                            />
+                                        </td>
+
+                                        {/* Credit — editable number */}
+                                        <td className="editable-cell">
+                                            <input
+                                                className="editable-input"
+                                                type="number"
+                                                placeholder="0.00"
+                                                defaultValue={txn.credit}
+                                                onBlur={e => handleTransactionUpdate(txn.id, 'credit', e.target.value)}
+                                            />
+                                        </td>
+
+                                        {/* Description — editable text */}
+                                        <td className="editable-cell">
+                                            <input
+                                                className="editable-input"
+                                                type="text"
+                                                placeholder="Enter description..."
+                                                defaultValue={txn.description}
+                                                onBlur={e => handleTransactionUpdate(txn.id, 'description', e.target.value)}
+                                            />
+                                        </td>
+
+                                        {/* File Name — editable text */}
+                                        <td className="editable-cell">
+                                            <input
+                                                className="editable-input"
+                                                type="text"
+                                                placeholder="Optional file..."
+                                                defaultValue={txn.fileName || ''}
+                                                onBlur={e => handleTransactionUpdate(txn.id, 'fileName', e.target.value)}
+                                            />
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
                     )}
                 </div>
+
+                {/* ── Add New Entry button ── */}
                 <button className="add-row-btn" onClick={() => setShowAddEntryModal(true)}>
-                    {/* <Plus size={18} />  */}
                     Add New Entry
                 </button>
             </div>
 
+            {/* ── Add New Entry modal ── */}
             {showAddEntryModal && (
                 <div className="entry-modal-overlay" onClick={closeAddEntryModal}>
-                    <div className="entry-modal-card" onClick={(e) => e.stopPropagation()}>
+                    <div className="entry-modal-card" onClick={e => e.stopPropagation()}>
                         <div className="entry-modal-header">
                             <h2>Add New Entry</h2>
                             <button
@@ -305,6 +331,7 @@ export function LedgerDetails() {
                             </div>
                         )}
 
+                        {/* Manual Entry option */}
                         <div className="entry-option-grid">
                             <button
                                 type="button"
@@ -317,12 +344,15 @@ export function LedgerDetails() {
                             </button>
                         </div>
 
+                        {/* File upload section */}
                         <div className="entry-form-group">
-                            <label>Upload Invoice <span className="entry-label-optional">(PDF, Excel, CSV)</span></label>
+                            <label>
+                                Upload Invoice <span className="entry-label-optional">(PDF, Excel, CSV)</span>
+                            </label>
                             <div
-                                className={`entry-file-dropzone ${uploading ? "entry-dropzone-disabled" : ""}`}
+                                className={`entry-file-dropzone ${uploading ? 'entry-dropzone-disabled' : ''}`}
                                 onDrop={handleDrop}
-                                onDragOver={handleDragOver}
+                                onDragOver={e => e.preventDefault()}
                                 onClick={() => !uploading && fileInputRef.current?.click()}
                             >
                                 <input
@@ -334,17 +364,9 @@ export function LedgerDetails() {
                                     className="entry-file-input-hidden"
                                     disabled={uploading}
                                 />
-                                <svg
-                                    width="32"
-                                    height="32"
-                                    viewBox="0 0 24 24"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    strokeWidth="2"
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    className="entry-upload-icon"
-                                >
+                                <svg width="32" height="32" viewBox="0 0 24 24" fill="none"
+                                    stroke="currentColor" strokeWidth="2" strokeLinecap="round"
+                                    strokeLinejoin="round" className="entry-upload-icon">
                                     <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
                                     <polyline points="17 8 12 3 7 8" />
                                     <line x1="12" y1="3" x2="12" y2="15" />
@@ -357,14 +379,14 @@ export function LedgerDetails() {
 
                             {files.length > 0 && (
                                 <ul className="entry-file-list">
-                                    {files.map((file, index) => (
-                                        <li key={`${file.name}-${index}`} className="entry-file-list-item">
+                                    {files.map((file, i) => (
+                                        <li key={`${file.name}-${i}`} className="entry-file-list-item">
                                             <span className="entry-file-icon">{getFileIcon(file.name)}</span>
                                             <span className="entry-file-name" title={file.name}>{file.name}</span>
                                             <button
                                                 type="button"
                                                 className="entry-file-remove-btn"
-                                                onClick={() => removeFile(index)}
+                                                onClick={() => removeFile(i)}
                                                 disabled={uploading}
                                             >
                                                 ✕
