@@ -9,6 +9,7 @@ const authRoute = require('./routes/authRoute');
 const settingsRoute = require('./routes/settingsRoute');
 const invoiceRoute = require('./routes/invoiceRoute');
 const bankStatementRoute = require('./routes/bankStatementRoute');
+const statsRoute = require('./routes/statsRoute');
 const initSchema = require('./config/initSchema');
 
 const ledgerRoute = require('./routes/ledgerRoute');
@@ -32,6 +33,7 @@ app.use('/api/v1/settings', settingsRoute);
 app.use('/api/v1/invoice', invoiceRoute);
 app.use('/api/v1/ledger', ledgerRoute);
 app.use('/api/v1/bank-statement', bankStatementRoute);
+app.use('/api/v1/stats', statsRoute);
 
 // Initialize database and start server
 const PORT = process.env.PORT || 8085;

@@ -1,6 +1,29 @@
-﻿/* ============================================
-   DASHBOARD PAGE â€” ReconFlow
+/* ============================================
+   DASHBOARD PAGE - ReconFlow
    ============================================ */
+
+/* CSS Variables for theming */
+.dashboard-page {
+  --dash-bg-card: #ffffff;
+  --dash-border: #e5e7eb;
+  --dash-text-primary: #111827;
+  --dash-text-secondary: #6b7280;
+  --dash-text-muted: #9ca3af;
+  --dash-bg-hover: #f9fafb;
+  --dash-bg-bar: #f3f4f6;
+  font-family: var(--font-body, system-ui, sans-serif);
+}
+
+/* Dark Theme */
+body.dark-theme .dashboard-page {
+  --dash-bg-card: #1e293b;
+  --dash-border: #334155;
+  --dash-text-primary: #f1f5f9;
+  --dash-text-secondary: #94a3b8;
+  --dash-text-muted: #64748b;
+  --dash-bg-hover: #334155;
+  --dash-bg-bar: #334155;
+}
 
 .dashboard-page {
   display: flex;
@@ -15,13 +38,13 @@
 
 .welcome-banner h1 {
   font-size: 1.5rem;
-  color: #111827;
+  color: var(--dash-text-primary);
   margin-bottom: 0.25rem;
   font-weight: 700;
 }
 
 .welcome-banner p {
-  color: #6b7280;
+  color: var(--dash-text-secondary);
   font-size: 0.95rem;
 }
 
@@ -33,10 +56,10 @@
 }
 
 .stat-card {
-  background: #ffffff;
+  background: var(--dash-bg-card);
   padding: 1.25rem;
   border-radius: 16px;
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--dash-border);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
   transition: transform 0.15s, box-shadow 0.15s;
 }
@@ -75,19 +98,19 @@
 .stat-card-title {
   font-size: 0.8rem;
   font-weight: 500;
-  color: #6b7280;
+  color: var(--dash-text-secondary);
 }
 
 .stat-card-value {
   font-size: 1.6rem;
   font-weight: 700;
-  color: #111827;
+  color: var(--dash-text-primary);
   margin-bottom: 0.25rem;
 }
 
 .stat-card-sub {
   font-size: 0.78rem;
-  color: #9ca3af;
+  color: var(--dash-text-muted);
 }
 
 /* Section Title */
@@ -101,7 +124,7 @@
 .section-title-row h2 {
   font-size: 1.1rem;
   font-weight: 700;
-  color: #111827;
+  color: var(--dash-text-primary);
 }
 
 .section-tag {
@@ -115,20 +138,20 @@
 
 /* Latest Reconciliation Card */
 .latest-recon-card {
-  background: #ffffff;
+  background: var(--dash-bg-card);
   border-radius: 16px;
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--dash-border);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
   overflow: hidden;
 }
 
 .latest-recon-header {
   padding: 1.25rem 1.5rem;
-  border-bottom: 1px solid #e5e7eb;
+  border-bottom: 1px solid var(--dash-border);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: #f9fafb;
+  background: var(--dash-bg-hover);
 }
 
 .latest-recon-header-left {
@@ -140,7 +163,7 @@
 .latest-recon-header-left h3 {
   font-size: 1rem;
   font-weight: 700;
-  color: #111827;
+  color: var(--dash-text-primary);
 }
 
 .recon-status-badge {
@@ -162,7 +185,7 @@
 
 .latest-recon-date {
   font-size: 0.8rem;
-  color: #6b7280;
+  color: var(--dash-text-secondary);
 }
 
 /* Recon Details Grid */
@@ -170,12 +193,12 @@
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 0;
-  border-bottom: 1px solid #e5e7eb;
+  border-bottom: 1px solid var(--dash-border);
 }
 
 .recon-detail-item {
   padding: 1.25rem 1.5rem;
-  border-right: 1px solid #e5e7eb;
+  border-right: 1px solid var(--dash-border);
 }
 
 .recon-detail-item:last-child {
@@ -186,7 +209,7 @@
   font-size: 0.75rem;
   font-weight: 600;
   text-transform: uppercase;
-  color: #9ca3af;
+  color: var(--dash-text-muted);
   letter-spacing: 0.05em;
   margin-bottom: 0.4rem;
 }
@@ -194,12 +217,12 @@
 .recon-detail-value {
   font-size: 1rem;
   font-weight: 700;
-  color: #111827;
+  color: var(--dash-text-primary);
 }
 
 .recon-detail-sub {
   font-size: 0.8rem;
-  color: #6b7280;
+  color: var(--dash-text-secondary);
   margin-top: 0.15rem;
 }
 
@@ -225,18 +248,18 @@
 }
 
 .match-bar-labels .label-left {
-  color: #6b7280;
+  color: var(--dash-text-secondary);
   font-weight: 500;
 }
 
 .match-bar-labels .label-right {
-  color: #111827;
+  color: var(--dash-text-primary);
   font-weight: 700;
 }
 
 .match-bar-track {
   height: 10px;
-  background: #f3f4f6;
+  background: var(--dash-bg-bar);
   border-radius: 99px;
   overflow: hidden;
   display: flex;
@@ -263,7 +286,7 @@
   align-items: center;
   gap: 0.35rem;
   font-size: 0.78rem;
-  color: #6b7280;
+  color: var(--dash-text-secondary);
 }
 
 .legend-dot {
@@ -279,14 +302,14 @@
 
 .overall-stats-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 1.25rem;
 }
 
 .overall-stat-card {
-  background: #ffffff;
+  background: var(--dash-bg-card);
   border-radius: 16px;
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--dash-border);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
   padding: 1.25rem;
   transition: transform 0.15s, box-shadow 0.15s;
@@ -307,7 +330,7 @@
 .overall-stat-header h4 {
   font-size: 0.85rem;
   font-weight: 600;
-  color: #374151;
+  color: var(--dash-text-primary);
 }
 
 .overall-stat-trend {
@@ -327,16 +350,21 @@
   color: #e11d48;
 }
 
+.trend-neutral {
+  background: #f3f4f6;
+  color: #6b7280;
+}
+
 .overall-stat-value {
   font-size: 1.5rem;
   font-weight: 700;
-  color: #111827;
+  color: var(--dash-text-primary);
   margin-bottom: 0.5rem;
 }
 
 .overall-stat-bar {
   height: 6px;
-  background: #f3f4f6;
+  background: var(--dash-bg-bar);
   border-radius: 99px;
   overflow: hidden;
   margin-bottom: 0.5rem;
@@ -355,21 +383,21 @@
 
 .overall-stat-footer {
   font-size: 0.78rem;
-  color: #9ca3af;
+  color: var(--dash-text-muted);
 }
 
 /* Mini Table */
 .mini-table-wrapper {
-  background: #ffffff;
+  background: var(--dash-bg-card);
   border-radius: 16px;
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--dash-border);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
   overflow: hidden;
 }
 
 .mini-table-header {
   padding: 1rem 1.25rem;
-  border-bottom: 1px solid #e5e7eb;
+  border-bottom: 1px solid var(--dash-border);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -378,7 +406,7 @@
 .mini-table-header h4 {
   font-size: 0.9rem;
   font-weight: 700;
-  color: #111827;
+  color: var(--dash-text-primary);
 }
 
 .mini-table-header a {
@@ -386,6 +414,23 @@
   color: #059669;
   font-weight: 500;
   text-decoration: none;
+}
+
+.recon-status-badge {
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.25rem 0.6rem;
+  border-radius: 99px;
+}
+
+.status-active {
+  background: #ecfdf5;
+  color: #059669;
+}
+
+.status-completed {
+  background: #eff6ff;
+  color: #2563eb;
 }
 
 .mini-table {
@@ -396,20 +441,20 @@
 .mini-table th {
   text-align: left;
   padding: 0.6rem 1.25rem;
-  background: #f9fafb;
+  background: var(--dash-bg-hover);
   font-size: 0.7rem;
   text-transform: uppercase;
-  color: #9ca3af;
+  color: var(--dash-text-muted);
   font-weight: 600;
   letter-spacing: 0.05em;
-  border-bottom: 1px solid #e5e7eb;
+  border-bottom: 1px solid var(--dash-border);
 }
 
 .mini-table td {
   padding: 0.85rem 1.25rem;
-  border-bottom: 1px solid #f3f4f6;
+  border-bottom: 1px solid var(--dash-border);
   font-size: 0.85rem;
-  color: #374151;
+  color: var(--dash-text-primary);
 }
 
 .mini-table tr:last-child td {
@@ -478,4 +523,3 @@
     grid-template-columns: 1fr;
   }
 }
-

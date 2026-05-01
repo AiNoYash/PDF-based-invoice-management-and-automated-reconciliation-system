@@ -1,7 +1,7 @@
 .ledger-table-container {
-    background: #ffffff;
+    background: var(--dash-bg-card, #ffffff);
     border-radius: 12px;
-    border: 1px solid var(--border-color);
+    border: 1px solid var(--dash-border, #e5e7eb);
     overflow: hidden;
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
 }
@@ -13,12 +13,12 @@
 }
 
 .ledger-table th {
-    background-color: #f9fafb;
+    background-color: var(--dash-bg-hover, #f9fafb);
     padding: 1rem 1.5rem;
     font-size: 0.85rem;
     font-weight: 600;
-    color: var(--text-muted);
-    border-bottom: 1px solid var(--border-color);
+    color: var(--dash-text-muted, #9ca3af);
+    border-bottom: 1px solid var(--dash-border, #e5e7eb);
     text-transform: uppercase;
     letter-spacing: 0.05em;
 }
@@ -26,8 +26,8 @@
 .ledger-table td {
     padding: 1.25rem 1.5rem;
     font-size: 0.9rem;
-    border-bottom: 1px solid var(--border-color);
-    color: var(--text-main);
+    border-bottom: 1px solid var(--dash-border, #e5e7eb);
+    color: var(--dash-text-primary, #111827);
 }
 
 .ledger-table tr:last-child td {
@@ -35,7 +35,7 @@
 }
 
 .ledger-table tr:hover {
-    background-color: #f9fafb;
+    background-color: var(--dash-bg-hover, #f9fafb);
 }
 
 .cell-name {
@@ -43,7 +43,7 @@
 }
 
 .cell-bank {
-    color: var(--text-muted);
+    color: var(--dash-text-muted, #9ca3af);
     font-family: monospace;
     font-size: 0.85rem;
 }
