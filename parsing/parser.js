@@ -54,24 +54,20 @@ async function parsePdf(pdfPath) {
             // Fetch the specific page object from the loaded document
             const page = await pdfDocument.getPage(pageNum);
 
-            // 4. Extract text content with spatial data
-            // getTextContent() is the crucial function for our spatial analysis. 
-            // It doesn't just return a single merged string of text.
-            // Instead, it returns an object containing an 'items' array. Each item represents 
-            // an individual text node (often a word, a line, or a phrase) and contains the string 
-            // itself along with its 'transform' matrix which gives us X, Y coordinates.
+     
             const textContent = await page.getTextContent();
 
             
-
-
-            // Store the items for this page in our results array to be returned.
-            // This structure will be useful later for Step B (Spatial Match).
             allPagesContent.push({
                 page: pageNum,
                 items: textContent.items
             });
         }
+
+        const invoiceData = getInvoiceDataFromPageItems(allPagesContent[0].items);
+
+        console.log(invoiceData);
+
 
         console.log(`[Parser] Finished processing ${pdfPath}`);
         return allPagesContent;
@@ -81,6 +77,15 @@ async function parsePdf(pdfPath) {
         throw error;
     }
 }
+
+function getInvoiceDataFromPageItems(pageItems) {
+    
+    
+
+    
+}
+
+
 
 // Export the function so it can be integrated with the classifier and API routes
 module.exports = {
