@@ -1,12 +1,14 @@
-require('dotenv').config({ override: true });
+const dotenv = require('dotenv');
+dotenv.config({ override: true }); // ? Give more priority to .env variables rather than those who exists by default
+
 const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');
 
 const authRoute = require('./routes/authRoute');
-const UserModel = require('./model/userModel');
+const settingsRoute = require('./routes/settingsRoute');
+const invoiceRoute = require('./routes/invoiceRoute');
 const initSchema = require('./config/initSchema');
-const appRoute = require('./routes/appRoute');
 
 const app = express();
 
@@ -15,30 +17,23 @@ app.use(cors());
 app.use(express.json());
 app.use(morgan('dev'));
 
+// Basic health check route
+app.get('/lol', (req, res) => {
+    res.status(200).json({ message: 'API is running cleanly' });
+});
 // Routes
 app.use('/api/v1/auth', authRoute);
-app.use('/api/v1', appRoute);
-
-// Basic health check route
-app.get('/', (req, res) => {
-    res.status(200).json({ message: 'API is running' });
-});
-
-// Protected route example
-const authMiddleware = require('./middleware/authMiddleware');
-app.get('/api/v1/user/profile', authMiddleware, async (req, res) => {
-    const user = await UserModel.findById(req.user.userId);
-    res.status(200).json({ user });
-});
+app.use('/api/v1/settings', settingsRoute);
+app.use('/api/v1/invoice', invoiceRoute);
 
 // Initialize database and start server
-const PORT = process.env.PORT || 8005;
+const PORT = process.env.PORT || 8085;
 
 const startServer = async () => {
     try {
         await initSchema();
         console.log("Database initialized successfully.");
-        
+
         app.listen(PORT, () => {
             console.log(`Server is running on port ${PORT}`);
         });

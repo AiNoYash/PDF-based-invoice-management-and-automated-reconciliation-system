@@ -1,34 +1,82 @@
-:root {
-  --font-family: 'Inter', sans-serif;
-  --bg-color: #f8fafc;
-  --white: #ffffff;
-  --text-main: #0f172a;
-  --text-muted: #64748b;
-  --primary-btn: #1e293b;
-  --primary-btn-hover: #334155;
-  --border-color: #e2e8f0;
-  --green: #10b981;
-  --yellow: #f59e0b;
-  --red: #ef4444;
-  --blue: #3b82f6;
-  --sidebar-active: #f1f5f9;
-}
 
-* {
-  margin: 0;
-  padding: 0;
+
+/* 1. Intuitive box-sizing model */
+*, *::before, *::after {
   box-sizing: border-box;
 }
 
-body {
-  font-family: var(--font-family);
-  background-color: var(--bg-color);
-  color: var(--text-main);
-  line-height: 1.5;
-  -webkit-font-smoothing: antialiased;
+/* 2. Remove default margins and padding */
+* {
+  margin: 0;
+  padding: 0;
 }
 
+/* 3. Allow percentage-based heights */
+html, body {
+  height: 100%;
+}
+
+/* 4. Sensible body defaults */
+body {
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
+/* 5. Responsive media defaults */
+img, picture, video, canvas, svg {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+/* 6. Inherit fonts for form controls */
+input, button, textarea, select {
+  font: inherit;
+  color: inherit;
+}
+
+/* 7. Prevent text overflow */
+p, h1, h2, h3, h4, h5, h6 {
+  overflow-wrap: break-word;
+}
+
+/* 8. Better heading line-heights */
+h1, h2, h3, h4, h5, h6 {
+  line-height: 1.2;
+}
+
+/* 9. Remove default list styles */
+ul, ol {
+  list-style: none;
+}
+
+/* 10. Clean up anchor tags */
 a {
   text-decoration: none;
   color: inherit;
+}
+
+/* 11. Reset buttons to plain clickable elements */
+button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+/* 12. Create a root stacking context (useful for React/modern frameworks) */
+#root, #__next {
+  isolation: isolate;
+}
+
+/* 13. Respect user motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

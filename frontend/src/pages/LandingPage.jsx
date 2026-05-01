@@ -1,241 +1,296 @@
 import React from 'react';
 import '../App.css';
+import './LandingPage.css';
+import useAuthStore from '../store/useAuthStore';
+import { Link } from 'react-router-dom';
 
 // SVGs
 const BarChartIcon = () => (
   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
 );
-
 const FileIcon = () => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+  <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
 );
-
 const CreditCardIcon = () => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg>
+  <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg>
 );
-
 const CheckCircleIcon = () => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
 );
-
 const ArrowRightIcon = () => (
   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
 );
+const ZapIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+);
+const ShieldIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+);
+const RefreshIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
+);
+const UploadIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="16 16 12 12 8 16"></polyline><line x1="12" y1="12" x2="12" y2="21"></line><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"></path></svg>
+);
+const SearchIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+);
+const ReportIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><line x1="10" y1="9" x2="8" y2="9"></line></svg>
+);
 
-import { Link } from 'react-router-dom';
+const handleSmoothScroll = (e, targetId) => {
+  e.preventDefault();
+  const el = document.getElementById(targetId);
+  if (el) {
+    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+};
 
 function LandingPage() {
-  const handleSpotlightMove = (event) => {
-    const rect = event.currentTarget.getBoundingClientRect();
-    const x = event.clientX - rect.left;
-    const y = event.clientY - rect.top;
-    event.currentTarget.style.setProperty('--mx', `${x}px`);
-    event.currentTarget.style.setProperty('--my', `${y}px`);
-  };
+  const isAuthenticated = useAuthStore(state => state.isAuthenticated);
+  const user = useAuthStore(state => state.user);
+  const username = user?.username;
+  const email = user?.email;
+  const avatarLetter = (username?.[0] ?? '?').toUpperCase();
 
   return (
     <div className="landing-page">
-      <div className="landing-orb orb-left" />
-      <div className="landing-orb orb-right" />
-      {/* Navbar */}
+      {/* NAVBAR */}
       <nav className="navbar">
-        <div className="brand">
+        <Link to="/" className="brand">
+          <div className="brand-icon-wrapper">
+            <BarChartIcon />
+          </div>
+          ReconFlow
+        </Link>
+        <div className="nav-center">
+          <a href="#features" className="nav-link" onClick={(e) => handleSmoothScroll(e, 'features')}>Features</a>
+          <a href="#how-it-works" className="nav-link" onClick={(e) => handleSmoothScroll(e, 'how-it-works')}>How It Works</a>
+          <Link to="/dashboard" className="nav-link">Dashboard</Link>
+        </div>
+        <div className="nav-right">
+          {isAuthenticated && username ? (
+            <div className="user-profile">
+              <div className="avatar">{avatarLetter}</div>
+              <div className="user-info">
+                <h4>{username}</h4>
+                <p>{email}</p>
+              </div>
+            </div>
+          ) : (
+            <>
+              <Link to="/auth?mode=login"><button className="btn-login">Log In</button></Link>
+              <Link to="/auth?mode=signup">
+                <button className="btn-primary">Get Started</button>
+              </Link>
+            </>
+          )}
+        </div>
+      </nav>
+
+      {/* HERO */}
+      <section className="hero-section">
+        <div className="hero-content">
+          <div className="hero-badge">
+            <span className="badge-dot"></span>
+            Smart Financial Automation for SMEs
+          </div>
+          <h1 className="hero-title">
+            Automate Invoice &amp;<br />
+            <span className="hero-title-accent">Reconciliation</span><br />
+            in Minutes
+          </h1>
+          <p className="hero-subtitle">
+            ReconFlow extracts financial data from your PDFs and cross-references them
+            with bank statements — eliminating hours of manual accounting work.
+          </p>
+          <div className="hero-cta-group">
+            {isAuthenticated ? (
+              <Link to="/dashboard">
+                <button className="btn-cta-primary">
+                  Go to Dashboard <ArrowRightIcon />
+                </button>
+              </Link>
+            ) : (
+              <Link to="/auth?mode=signup">
+                <button className="btn-cta-primary">
+                  Start for Free <ArrowRightIcon />
+                </button>
+              </Link>
+            )}
+            <a href="#how-it-works" onClick={(e) => handleSmoothScroll(e, 'how-it-works')}>
+              <button className="btn-cta-secondary">See How It Works</button>
+            </a>
+          </div>
+
+        </div>
+
+        {/* Hero visual card */}
+        <div className="hero-visual">
+          <div className="hero-card">
+            <div className="card-header">
+              <div className="card-dots">
+                <span></span><span></span><span></span>
+              </div>
+              <span className="card-title-tag">Reconciliation Session</span>
+            </div>
+            <div className="card-body">
+              <div className="recon-row matched">
+                <CheckCircleIcon />
+                <span className="txn-id">TXN-001</span>
+                <span className="txn-meta">Debit · 15 Jan</span>
+                <span className="amount">₹42,500</span>
+                <span className="status-badge exact-badge">Exact</span>
+              </div>
+              <div className="recon-row matched">
+                <CheckCircleIcon />
+                <span className="txn-id">TXN-002</span>
+                <span className="txn-meta">Credit · 18 Jan</span>
+                <span className="amount">₹18,200</span>
+                <span className="status-badge exact-badge">Exact</span>
+              </div>
+              <div className="recon-row partial">
+                <div className="partial-dot"></div>
+                <span className="txn-id">TXN-003</span>
+                <span className="txn-meta">Debit · 22 Jan</span>
+                <span className="amount">₹91,000</span>
+                <span className="status-badge partial-badge">Partial</span>
+              </div>
+              <div className="recon-row matched">
+                <CheckCircleIcon />
+                <span className="txn-id">TXN-004</span>
+                <span className="txn-meta">Debit · 25 Jan</span>
+                <span className="amount">₹6,750</span>
+                <span className="status-badge exact-badge">Exact</span>
+              </div>
+              <div className="card-summary">
+                <span>3 exact · 1 partial</span>
+                <span className="summary-amount">₹67,450 reconciled</span>
+              </div>
+            </div>
+          </div>
+          <div className="floating-badge fb-1">
+            <ZapIcon />
+            <span>Auto-matched</span>
+          </div>
+          <div className="floating-badge fb-2">
+            <ShieldIcon />
+            <span>Audit Ready</span>
+          </div>
+        </div>
+      </section>
+
+      {/* FEATURES */}
+      <section id="features" className="features-section">
+        <div className="section-header">
+          <span className="section-tag">Features</span>
+          <h2 className="section-title">Everything you need to reconcile faster</h2>
+          <p className="section-subtitle">
+            Built for real-world accounting workflows — multi-business, multi-account, and period-based reconciliation.
+          </p>
+        </div>
+        <div className="features-grid">
+          <div className="feature-card feature-card-large">
+            <div className="feature-icon-wrap">
+              <ShieldIcon />
+            </div>
+            <h3>Multi-Business &amp; Multi-Account</h3>
+            <p>Manage multiple businesses under one login. Each business can have several bank accounts. Your last active business is remembered for a seamless return.</p>
+            <ul className="feature-checklist">
+              <li><CheckCircleIcon /> One login, many businesses</li>
+              <li><CheckCircleIcon /> Multiple bank accounts per business</li>
+            </ul>
+          </div>
+          <div className="feature-card">
+            <div className="feature-icon-wrap">
+              <FileIcon />
+            </div>
+            <h3>Ledger Upload &amp; Parse</h3>
+            <p>Create month/year-based Ledgers linked to a bank account. Upload Excel ledgers or text-based PDF invoices — stored locally and parsed into structured records.</p>
+          </div>
+          <div className="feature-card">
+            <div className="feature-icon-wrap">
+              <CreditCardIcon />
+            </div>
+            <h3>Bank Statement Groups</h3>
+            <p>Create period-based Bank Statement Groups. Upload CSV exports from your bank. The system parses and stores every transaction row for matching.</p>
+          </div>
+          <div className="feature-card">
+            <div className="feature-icon-wrap">
+              <RefreshIcon />
+            </div>
+            <h3>Smart Reconciliation Engine</h3>
+            <p>Link a Ledger and a Bank Statement Group into a Reconciliation Session. The engine cross-references Date, Amount, and Transaction Type automatically.</p>
+          </div>
+          <div className="feature-card feature-card-large">
+            <div className="feature-icon-wrap">
+              <ZapIcon />
+            </div>
+            <h3>Exact, Partial &amp; Manual Matches</h3>
+            <p>Matches are classified as auto-exact, auto-partial, or manual. Every ledger and bank record tracks an <code>is_reconciled</code> flag so unmatched leftovers are instantly visible.</p>
+            <ul className="feature-checklist">
+              <li><CheckCircleIcon /> Auto-exact matching</li>
+              <li><CheckCircleIcon /> Auto-partial suggestions</li>
+              <li><CheckCircleIcon /> Manual override &amp; filtering</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      {/* HOW IT WORKS */}
+      <section id="how-it-works" className="how-section">
+        <div className="section-header">
+          <span className="section-tag">How It Works</span>
+          <h2 className="section-title">From setup to reconciliation — in 3 steps</h2>
+          <p className="section-subtitle">
+            Period-based workflow built for accountants. Create containers, upload files, and reconcile side-by-side.
+          </p>
+        </div>
+        <div className="steps-container">
+          <div className="step-card">
+            <div className="step-number">01</div>
+            <div className="step-icon-wrap">
+              <FileIcon />
+            </div>
+            <h3>Create Ledger &amp; Upload Files</h3>
+            <p>Add your business and bank accounts. Create a Ledger for a specific month/year, then upload Excel ledgers or text-based PDF invoices. Files are stored securely and parsed into structured records.</p>
+          </div>
+          <div className="step-connector">
+            <ArrowRightIcon />
+          </div>
+          <div className="step-card">
+            <div className="step-number">02</div>
+            <div className="step-icon-wrap">
+              <CreditCardIcon />
+            </div>
+            <h3>Create Bank Statement Group</h3>
+            <p>Create a matching Bank Statement Group for the same period. Upload your bank's CSV export. The system parses every transaction row and prepares it for cross-referencing.</p>
+          </div>
+          <div className="step-connector">
+            <ArrowRightIcon />
+          </div>
+          <div className="step-card">
+            <div className="step-number">03</div>
+            <div className="step-icon-wrap">
+              <RefreshIcon />
+            </div>
+            <h3>Reconcile &amp; Review Matches</h3>
+            <p>Start a Reconciliation Session linking both sides. The engine auto-matches by Date, Amount, and Type. Review exact matches, handle partials manually, and filter unmatched leftovers instantly.</p>
+          </div>
+        </div>
+      </section>
+
+      {/* FOOTER */}
+      <footer className="footer">
+        <div className="footer-brand">
           <div className="brand-icon-wrapper">
             <BarChartIcon />
           </div>
           ReconFlow
         </div>
-        <div className="nav-center">
-          <a href="#features" className="nav-link">Features</a>
-          <a href="#how" className="nav-link">How It Works</a>
-          <Link to="/auth" className="nav-link">Dashboard</Link>
-          <a href="#pricing" className="nav-link">Pricing</a>
-        </div>
-        <div className="nav-right">
-          <Link to="/auth"><button className="btn-login">Log In</button></Link>
-          <Link to="/auth">
-            <button className="btn-primary">Get Started</button>
-          </Link>
-        </div>
-      </nav>
-
-      {/* Hero Content */}
-      <section className="hero">
-        
-        {/* Left Side: Content */}
-        <div className="hero-content">
-          <div className="hero-badge">
-            <div className="hero-badge-dot"></div> Automate Your Financial Reconciliation
-          </div>
-          
-          <h1 className="hero-title">
-            Smart Invoice Processing for <span className="text-green">Growing Businesses</span>
-          </h1>
-          
-          <p className="hero-subtitle">
-            Extract invoice data automatically, match with bank statements instantly, and reduce manual reconciliation effort by up to 90%. Built for SMEs who value accuracy and efficiency.
-          </p>
-          
-          <div className="hero-cta">
-            <Link to="/auth">
-              <button className="btn-primary">
-                Get Started Free <ArrowRightIcon />
-              </button>
-            </Link>
-            <a href="#features" className="btn-secondary">Explore Features</a>
-          </div>
-
-          <div className="hero-kpi-row">
-            <div className="hero-kpi spotlight-card" onMouseMove={handleSpotlightMove}>
-              <h4>99.2%</h4>
-              <p>Data extraction accuracy</p>
-            </div>
-            <div className="hero-kpi spotlight-card" onMouseMove={handleSpotlightMove}>
-              <h4>2.4x</h4>
-              <p>Faster month-end closing</p>
-            </div>
-            <div className="hero-kpi spotlight-card" onMouseMove={handleSpotlightMove}>
-              <h4>24/7</h4>
-              <p>Live reconciliation visibility</p>
-            </div>
-          </div>
-          
-          <div className="hero-trust">
-            <div className="trust-item">
-              <CheckCircleIcon /> No credit card required
-            </div>
-            <div className="trust-item">
-              <CheckCircleIcon /> Free 14-day trial
-            </div>
-          </div>
-        </div>
-
-        {/* Right Side: Visual Mockup */}
-        <div className="hero-mockup-wrapper">
-          
-          {/* Floating Bank Sync Toast */}
-          <div className="floating-toast interactive-float">
-            <div className="toast-icon">
-              <CreditCardIcon />
-            </div>
-            <div className="toast-details">
-              <h4>Bank Synced</h4>
-              <p>2 min ago</p>
-            </div>
-          </div>
-
-          {/* Main Card */}
-          <div className="mockup-card interactive-tilt spotlight-card" onMouseMove={handleSpotlightMove}>
-            <div className="window-controls">
-              <div className="control-dot dot-red"></div>
-              <div className="control-dot dot-yellow"></div>
-              <div className="control-dot dot-green"></div>
-            </div>
-
-            <div className="mockup-header">
-              <h3>Reconciliation Overview</h3>
-              <p>April 2026</p>
-            </div>
-
-            <div className="mockup-stats-grid">
-              <div className="mini-stat-card stat-matched">
-                <div className="m-val">847</div>
-                <div className="m-label">Matched</div>
-              </div>
-              <div className="mini-stat-card stat-partial">
-                <div className="m-val">23</div>
-                <div className="m-label">Partial</div>
-              </div>
-              <div className="mini-stat-card stat-unmatched">
-                <div className="m-val">12</div>
-                <div className="m-label">Unmatched</div>
-              </div>
-            </div>
-
-            <div className="mockup-list">
-              <div className="mockup-list-item interactive-card">
-                <div className="item-left">
-                  <div className="item-icon">
-                    <FileIcon />
-                  </div>
-                  <div className="item-details">
-                    <h4>Tech Solutions Ltd</h4>
-                    <p>Invoice #INV-2024000</p>
-                  </div>
-                </div>
-                <div className="item-right">
-                  <div className="item-amount">$4,250.00</div>
-                  <div className="item-status">Matched</div>
-                </div>
-              </div>
-
-              <div className="mockup-list-item interactive-card">
-                <div className="item-left">
-                  <div className="item-icon">
-                    <FileIcon />
-                  </div>
-                  <div className="item-details">
-                    <h4>Office Supplies Co</h4>
-                    <p>Invoice #INV-2024001</p>
-                  </div>
-                </div>
-                <div className="item-right">
-                  <div className="item-amount">$892.50</div>
-                  <div className="item-status">Matched</div>
-                </div>
-              </div>
-
-              <div className="mockup-list-item interactive-card">
-                <div className="item-left">
-                  <div className="item-icon">
-                    <FileIcon />
-                  </div>
-                  <div className="item-details">
-                    <h4>Cloud Services Inc</h4>
-                    <p>Invoice #INV-2024002</p>
-                  </div>
-                </div>
-                <div className="item-right">
-                  <div className="item-amount">$1,500.00</div>
-                  <div className="item-status">Partial Match</div>
-                </div>
-              </div>
-            </div>
-            
-          </div>
-        </div>
-
-      </section>
-
-      <section id="features" className="feature-strip">
-        <div className="feature-pill spotlight-card" onMouseMove={handleSpotlightMove}>AI invoice understanding</div>
-        <div className="feature-pill spotlight-card" onMouseMove={handleSpotlightMove}>Automated bank statement matching</div>
-        <div className="feature-pill spotlight-card" onMouseMove={handleSpotlightMove}>Reconciliation dashboard analytics</div>
-        <div className="feature-pill spotlight-card" onMouseMove={handleSpotlightMove}>SME-focused workflow design</div>
-      </section>
-
-      <section id="how" className="landing-section-block">
-        <h2>How It Works</h2>
-        <p>
-          Register your account, add your business and vendors, upload invoice PDFs and statement CSVs,
-          then review matched, partially matched, and pending payments in one dashboard.
-        </p>
-        <div className="section-cta-row">
-          <Link to="/auth"><button className="btn-primary">Start Setup</button></Link>
-          <a href="#pricing" className="btn-secondary">View Plans</a>
-        </div>
-      </section>
-
-      <section id="pricing" className="landing-section-block">
-        <h2>Pricing</h2>
-        <p>
-          Begin free to evaluate reconciliation workflows. Upgrade later as your invoice volume grows.
-        </p>
-        <div className="section-cta-row">
-          <Link to="/auth"><button className="btn-primary">Get Started Free</button></Link>
-          <a href="#features" className="btn-secondary">Compare Features</a>
-        </div>
-      </section>
+        <p className="footer-copy">Created By ~ Bhavay, Yash, Herit, Rushal, Vardaan</p>
+      </footer>
     </div>
   );
 }

@@ -1,45 +1,57 @@
-import React from 'react';
-import { BrowserRouter as Router, Navigate, Route, Routes } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import LandingPage from './pages/LandingPage';
+import Dashboard from './pages/dashboard/Dashboard';
 import Auth from './pages/Auth';
-import Dashboard from './pages/Dashboard';
-import BusinessesPage from './pages/BusinessesPage';
-import VendorsPage from './pages/VendorsPage';
-import InvoicesPage from './pages/InvoicesPage';
-import BankAccountsPage from './pages/BankAccountsPage';
-import StatementsPage from './pages/StatementsPage';
-import ReconciliationPage from './pages/ReconciliationPage';
-import AppShell from './pages/AppShell';
+import ProtectedRoute from './components/ProtectedRoute'; // Import the guard
+import useAuthStore from './store/useAuthStore';
+import { DashboardPage } from './pages/dashboard/pages/DashboardPage';
+import { LedgerCollectionPage } from './pages/dashboard/pages/LedgerCollectionPage';
+import { BankStatementsPage } from './pages/dashboard/pages/BankStatementsPage';
+import { ReconciliationsPage } from './pages/dashboard/pages/ReconciliationsPage';
+import { SettingsPage } from './pages/dashboard/pages/SettingsPage';
+import { LedgerDetails } from './pages/dashboard/pages/components/LedgerDetails';
+import { StatementGroupDetails } from "./pages/dashboard/pages/components/StatementGroupDetails";
+import { ReconciliationDetails } from './pages/dashboard/pages/components/ReconciliationDetails';
 
-function ProtectedRoute({ children }) {
-  const token = localStorage.getItem('token');
-  if (!token) {
-    return <Navigate to="/auth" replace />;
-  }
-  return children;
-}
 
 function App() {
+
+  const checkAuth = useAuthStore((state) => state.checkAuth);
+
+  // Check token validity whenever the app loads or tab is refreshed
+  useEffect(() => {
+    checkAuth();
+  }, [checkAuth]);
+
+
   return (
     <Router>
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/auth" element={<Auth />} />
-        <Route
-          path="/dashboard"
-          element={(
-            <ProtectedRoute>
-              <AppShell />
-            </ProtectedRoute>
-          )}
-        >
-          <Route index element={<Dashboard />} />
-          <Route path="businesses" element={<BusinessesPage />} />
-          <Route path="vendors" element={<VendorsPage />} />
-          <Route path="invoices" element={<InvoicesPage />} />
-          <Route path="bank-accounts" element={<BankAccountsPage />} />
-          <Route path="statements" element={<StatementsPage />} />
-          <Route path="reconciliation" element={<ReconciliationPage />} />
+
+        <Route element={<ProtectedRoute />}>
+          <Route path="/dashboard" element={<Dashboard />}>
+            <Route index element={<DashboardPage />} />
+
+            <Route path="ledger-collection"  >
+              <Route index element={<LedgerCollectionPage />} />
+              <Route path=":id" element={<LedgerDetails />} />
+            </Route>
+
+            <Route path="bank-statements"  >
+              <Route index element={<BankStatementsPage />} />
+              <Route path=":id" element={<StatementGroupDetails />} />
+            </Route>
+
+            <Route path="reconciliations"  >
+              <Route index element={<ReconciliationsPage />} />
+              <Route path=":id" element={<ReconciliationDetails />} />
+            </Route>
+
+            <Route path="settings" element={<SettingsPage />} />
+          </Route>
         </Route>
       </Routes>
     </Router>

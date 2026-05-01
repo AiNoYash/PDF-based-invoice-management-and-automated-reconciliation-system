@@ -1,0 +1,57 @@
+.ledger-table-container {
+    background: #ffffff;
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+    overflow: hidden;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+}
+
+.ledger-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+.ledger-table th {
+    background-color: #f9fafb;
+    padding: 1rem 1.5rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    border-bottom: 1px solid var(--border-color);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.ledger-table td {
+    padding: 1.25rem 1.5rem;
+    font-size: 0.9rem;
+    border-bottom: 1px solid var(--border-color);
+    color: var(--text-main);
+}
+
+.ledger-table tr:last-child td {
+    border-bottom: none;
+}
+
+.ledger-table tr:hover {
+    background-color: #f9fafb;
+}
+
+.cell-name {
+    font-weight: 500;
+}
+
+.cell-bank {
+    color: var(--text-muted);
+    font-family: monospace;
+    font-size: 0.85rem;
+}
+
+.cell-entries {
+    font-weight: 600;
+}
+
+tr {
+    cursor: pointer;
+}

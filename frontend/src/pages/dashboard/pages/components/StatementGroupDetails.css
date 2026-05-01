@@ -1,0 +1,75 @@
+.btn-secondary {
+    background-color: #ffffff;
+    color: var(--text-main);
+    border: 1px solid var(--border-color);
+    padding: 0.65rem 1.25rem;
+    border-radius: 99px;
+    font-weight: 500;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.btn-secondary:hover {
+    background-color: var(--bg-light);
+    border-color: #d1d5db;
+}
+
+.editable-cell {
+    padding: 0.5rem 0.75rem !important;
+}
+
+.editable-input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0.5rem;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    font-family: inherit;
+    font-size: 0.9rem;
+    color: var(--text-main);
+    background: transparent;
+    transition: all 0.2s;
+}
+
+.editable-input:hover {
+    border-color: var(--border-color);
+    background: #ffffff;
+}
+
+.editable-input:focus {
+    border-color: var(--primary);
+    background: #ffffff;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(5, 150, 105, 0.1);
+}
+
+select.editable-input {
+    cursor: pointer;
+    appearance: none;
+}
+
+.add-row-btn {
+    margin-top: 1rem;
+    background-color: #f0fdf4;
+    color: var(--primary);
+    border: 1px dashed var(--primary);
+    padding: 0.75rem;
+    border-radius: 8px;
+    font-weight: 500;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    width: 100%;
+}
+
+.add-row-btn:hover {
+    background-color: #dcfce7;
+}

@@ -1,5 +1,7 @@
-import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useNavigate, Link, useSearchParams } from 'react-router-dom';
+import useAuthStore from '../store/useAuthStore';
+
 import './Auth.css';
 
 const BarChartIcon = () => (
@@ -7,16 +9,40 @@ const BarChartIcon = () => (
 );
 
 function Auth() {
-  const [isLogin, setIsLogin] = useState(true);
+
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+  const login = useAuthStore((state) => state.login);
+
+
+  const [searchParams, setSearchParams] = useSearchParams();
+  const mode = searchParams.get('mode');
+
+  const [isLogin, setIsLogin] = useState(mode !== 'signup');
+
+  const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  
+
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-  
+
   const navigate = useNavigate();
-  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8085';
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate('/dashboard', { replace: true }); // ? The user should not be able to come to this page even if they click undo button 
+    }
+  }, [isAuthenticated, navigate]);
+
+  useEffect(() => {
+    // ? If there is no mode then we manually set it to login
+    if (!mode)
+      setSearchParams({ mode: "login" });
+    else
+      setIsLogin(mode !== 'signup');
+  }, [mode]);
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -25,15 +51,18 @@ function Auth() {
     setIsLoading(true);
 
     const endpoint = isLogin ? '/api/v1/auth/login' : '/api/v1/auth/register';
-    
+
     try {
-      const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+      // ! Hard coded backend port
+      const response = await fetch(`http://localhost:8085${endpoint}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password })
+        body: JSON.stringify(isLogin ? { email, password } : { username, email, password })
       });
 
       const data = await response.json();
+
+      console.log(data);
 
       if (!response.ok) {
         throw new Error(data.message || 'Something went wrong');
@@ -41,13 +70,17 @@ function Auth() {
 
       if (isLogin) {
         // Success Login
-        localStorage.setItem('token', data.token); // Store JWT securely
+        login(data.user, data.token); // ? This is from zustand and token is being saved in localStorage by default
         setSuccess('Login successful! Redirecting...');
+
+
         setTimeout(() => {
-          navigate('/dashboard'); // Route to actual dashboard
+          navigate('/dashboard'); // ? Takes some time for no reason 
         }, 1000);
+
       } else {
         // Success Registration
+
         setSuccess('Registration successful! Please log in.');
         setTimeout(() => {
           setIsLogin(true); // Switch view to login directly
@@ -81,28 +114,42 @@ function Auth() {
         {success && <div className="success-message">{success}</div>}
 
         <form className="auth-form" onSubmit={handleSubmit}>
+          {!isLogin && (
+            <div className="form-group">
+              <label>Username</label>
+              <input
+                type="text"
+                placeholder="Enter Username"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                required={!isLogin}
+              />
+            </div>
+          )}
+
           <div className="form-group">
             <label>Email Address</label>
-            <input 
-              type="email" 
-              placeholder="name@company.com" 
+            <input
+              type="email"
+              placeholder="Enter Email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              required 
+              required
             />
           </div>
+
           <div className="form-group">
             <label>Password</label>
-            <input 
-              type="password" 
-              placeholder="••••••••" 
+            <input
+              type="password"
+              placeholder="••••••••"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              required 
+              required
               minLength="6"
             />
           </div>
-          
+
           <button type="submit" className="btn-auth-submit" disabled={isLoading}>
             {isLoading ? 'Processing...' : isLogin ? 'Sign In' : 'Sign Up'}
           </button>
@@ -111,7 +158,9 @@ function Auth() {
         <div className="auth-toggle">
           {isLogin ? "Don't have an account?" : "Already have an account?"}
           <span onClick={() => {
-            setIsLogin(!isLogin);
+            const newMode = isLogin ? 'signup' : 'login';
+            setSearchParams({ mode: newMode });
+
             setError(null);
             setSuccess(null);
           }}>
