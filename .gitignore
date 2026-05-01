@@ -37,7 +37,5 @@ Thumbs.db
 a.out
 
 # Uploaded files (user content — never commit)
-uploads/*
-!uploads/.gitkeep
-uploads/**/*
+uploads/**
 !uploads/**/.gitkeep
