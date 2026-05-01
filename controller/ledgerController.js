@@ -27,7 +27,6 @@ const getLedgers = async (req, res) => {
 
         const formattedLedgers = ledgers.map(ledger => ({
             id: ledger.id,
-            name: ledger.name,
             bankAccount: [
                 ledger.bank_name,
                 ledger.account_nickname ? `(${ledger.account_nickname})` : '',
@@ -66,16 +65,16 @@ const getLedgerById = async (req, res) => {
 // ─── POST /api/v1/ledger ─────────────────────────────────────────────────────
 const createLedger = async (req, res) => {
     try {
-        const { bankAccountId, name, targetMonth, targetYear } = req.body;
+        const { bankAccountId, targetMonth, targetYear } = req.body;
 
-        if (!bankAccountId || !name || !targetMonth || !targetYear) {
+        if (!bankAccountId || !targetMonth || !targetYear) {
             return res.status(400).json({
                 success: false,
-                message: 'Missing required fields: bankAccountId, name, targetMonth, targetYear'
+                message: 'Missing required fields: bankAccountId, targetMonth, targetYear'
             });
         }
 
-        const ledgerId = await LedgerModel.create(bankAccountId, name, targetMonth, targetYear);
+        const ledgerId = await LedgerModel.create(bankAccountId, targetMonth, targetYear);
 
         res.status(201).json({
             success: true,

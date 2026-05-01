@@ -6,7 +6,6 @@ class LedgerModel {
         const [rows] = await db.execute(
             `SELECT
                 l.id,
-                l.name,
                 l.target_month,
                 l.target_year,
                 l.created_at,
@@ -18,7 +17,7 @@ class LedgerModel {
             JOIN bank_accounts ba ON l.bank_account_id = ba.id
             LEFT JOIN ledger_files lf ON l.id = lf.ledger_id
             WHERE ba.business_id = ?
-            GROUP BY l.id, l.name, l.target_month, l.target_year, l.created_at,
+            GROUP BY l.id, l.target_month, l.target_year, l.created_at,
                      ba.bank_name, ba.account_nickname, ba.account_last_four
             ORDER BY l.created_at DESC`,
             [businessId]
@@ -27,10 +26,10 @@ class LedgerModel {
     }
 
     // Create a new ledger
-    static async create(bankAccountId, name, targetMonth, targetYear) {
+    static async create(bankAccountId, targetMonth, targetYear) {
         const [result] = await db.execute(
-            'INSERT INTO ledgers (bank_account_id, name, target_month, target_year) VALUES (?, ?, ?, ?)',
-            [bankAccountId, name, targetMonth, targetYear]
+            'INSERT INTO ledgers (bank_account_id, target_month, target_year) VALUES (?, ?, ?)',
+            [bankAccountId, targetMonth, targetYear]
         );
         return result.insertId;
     }
@@ -40,7 +39,6 @@ class LedgerModel {
         const [rows] = await db.execute(
             `SELECT
                 l.id,
-                l.name,
                 l.target_month,
                 l.target_year,
                 l.created_at,
