@@ -54,10 +54,18 @@ async function parsePdf(pdfPath) {
             // Fetch the specific page object from the loaded document
             const page = await pdfDocument.getPage(pageNum);
 
-     
+
             const textContent = await page.getTextContent();
 
-            
+<<<<<<< HEAD
+
+=======
+
+
+
+            // Store the items for this page in our results array to be returned.
+            // This structure will be useful later for Step B (Spatial Match).
+>>>>>>> b0b8605 (fix: resolve reconciliation dropdown and ledger missing fields)
             allPagesContent.push({
                 page: pageNum,
                 items: textContent.items
@@ -79,10 +87,10 @@ async function parsePdf(pdfPath) {
 }
 
 function getInvoiceDataFromPageItems(pageItems) {
-    
-    
 
-    
+
+
+
 }
 
 

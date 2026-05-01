@@ -228,6 +228,7 @@ const getStatementGroups = async (req, res) => {
   try {
     const [rows] = await db.execute(
       `SELECT g.id,
+              g.bank_account_id,
               g.name,
               g.target_month AS month,
               g.target_year AS year,
@@ -243,6 +244,7 @@ const getStatementGroups = async (req, res) => {
 
     const groups = rows.map((row) => ({
       id: row.id,
+      bankAccountId: row.bank_account_id,
       name: row.name,
       month: row.month,
       year: row.year,
