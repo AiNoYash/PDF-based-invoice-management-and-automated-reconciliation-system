@@ -1,6 +1,7 @@
 const fs = require('fs');
 const pdfParse = require('pdf-parse');
 const db = require('../config/db');
+const { PDFParse } = require('pdf-parse');
 
 
 
@@ -12,14 +13,14 @@ const parseInvoiceText = (text) => {
     let transaction_date = null;
     let amount = null;
     let description = "Invoice";
-    
+
     // Simple extraction logic - adjust regex as needed for actual formats
-    
+
     // Look for Invoice Number (e.g. INV-1020, Invoice: 12345)
     const invRegex = /Invoice(?:\s*No\.?|\s*Number|\s*\#)?\s*:?\s*([A-Za-z0-9\-]+)/i;
     const invMatch = text.match(invRegex);
     if (invMatch) transaction_id = invMatch[1];
-    
+
     // Look for Date (e.g. Date: 12/04/2026, 2026-04-12)
     const dateRegex = /Date\s*:?\s*(\d{1,4}[\/\-\.]\d{1,2}[\/\-\.]\d{1,4})/i;
     const dateMatch = text.match(dateRegex);
@@ -59,16 +60,16 @@ const uploadInvoice = async (req, res) => {
         }
 
         const ledger_id = req.body.ledger_id || 1; // Assuming passed in body, default to 1 if testing
-        
+
         const filePath = req.file.path;
         const dataBuffer = fs.readFileSync(filePath);
-        
-        const pdfParse = getPdfParser();
-        const data = await pdfParse(dataBuffer);
+
+        const pdfParse = new PDFParse({ dataBuffer });
+        const data = await pdfParse.getText();
         const text = data.text;
-        
+
         const parsedData = parseInvoiceText(text);
-        
+
         // Save file record to ledger_files
         const [fileResult] = await db.execute(
             'INSERT INTO ledger_files (ledger_id, file_path, file_type) VALUES (?, ?, ?)',
@@ -82,8 +83,8 @@ const uploadInvoice = async (req, res) => {
             [ledger_id, ledger_file_id, parsedData.transaction_id, parsedData.transaction_date, parsedData.amount || 0.00, parsedData.transaction_type, parsedData.description]
         );
 
-        res.status(200).json({ 
-            message: "PDF uploaded and parsed successfully!", 
+        res.status(200).json({
+            message: "PDF uploaded and parsed successfully!",
             fileName: req.file.filename,
             parsedData,
             recordId: recordResult.insertId
