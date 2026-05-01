@@ -34,7 +34,12 @@
     border-bottom: none;
 }
 
-.ledger-table tr:hover {
+.ledger-table tbody tr {
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.ledger-table tbody tr:hover {
     background-color: #f9fafb;
 }
 
@@ -46,6 +51,39 @@
     color: var(--text-muted);
     font-family: monospace;
     font-size: 0.85rem;
+}
+
+.cell-entries {
+    text-align: center;
+    font-weight: 500;
+}
+
+.error-banner {
+    background-color: #fee;
+    border: 1px solid #fcc;
+    color: #c33;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+}
+
+.loading-container {
+    background: #ffffff;
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+    padding: 2rem;
+    text-align: center;
+    color: var(--text-muted);
+}
+
+.empty-state {
+    background: #ffffff;
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+    padding: 3rem 2rem;
+    text-align: center;
+    color: var(--text-muted);
 }
 
 .cell-entries {

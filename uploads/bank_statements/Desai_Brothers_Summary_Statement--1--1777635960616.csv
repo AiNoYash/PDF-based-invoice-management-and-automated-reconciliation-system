@@ -1,0 +1,11 @@
+Invoice_Number,Transaction_Date,Description,Customer_Name,Grand_Total,Transaction_Type
+DBL/SALE/2026/101,23-11-2026,Sales Settlement - Electronics,Reliance Retail Ltd,2094500,Credit
+DBL/SALE/2026/102,23-04-2026,Sales Settlement - Televisions,Tata Croma,684400,Credit
+DBL/SALE/2026/103,23-04-2026,Sales Settlement - Bulk Mobile,Vijay Sales,1718080,Credit
+DBL/SALE/2026/104,23-04-2026,Sales Settlement - Premium Audio,Unison Electronics,365800,Credit
+DBL/SALE/2026/105,23-04-2026,Sales Settlement - Wearables,Aditya Birla Retail,1758200,Credit
+DBL/SALE/2026/106,23-04-2026,Sales Settlement - Gaming Consoles,Techno Hub,621152,Credit
+DBL/SALE/2026/107,23-04-2026,Sales Settlement - Computing,NextGen Digital,686760,Credit
+DBL/SALE/2026/108,23-04-2026,Sales Settlement - Tablets,E-Mart Solutions,1104480,Credit
+DBL/SALE/2026/109,23-04-2026,Sales Settlement - Peripherals,Future Retail,649000,Credit
+DBL/SALE/2026/110,23-04-2026,Sales Settlement - Smart Home,Smart Home Co,743388.2,Credit
