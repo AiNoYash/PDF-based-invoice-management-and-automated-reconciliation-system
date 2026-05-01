@@ -1,3 +1,8 @@
+//Initial Parsing & Header Normalization
+//Searching for Synonyms
+//The Date Construction Engine
+//Smart Credit / Debit Detection
+//Database Insertion
 const fs = require('fs');
 const Papa = require('papaparse');
 const db = require('../config/db');

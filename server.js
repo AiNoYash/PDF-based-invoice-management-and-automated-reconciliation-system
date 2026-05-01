@@ -13,6 +13,7 @@ const statsRoute = require('./routes/statsRoute');
 const initSchema = require('./config/initSchema');
 
 const ledgerRoute = require('./routes/ledgerRoute');
+const reconciliationRoute = require('./routes/reconciliationRoute');
 
 const { parsePdf } = require('./parsing/parser');
 
@@ -34,6 +35,7 @@ app.use('/api/v1/invoice', invoiceRoute);
 app.use('/api/v1/ledger', ledgerRoute);
 app.use('/api/v1/bank-statement', bankStatementRoute);
 app.use('/api/v1/stats', statsRoute);
+app.use('/api/v1/reconciliation', reconciliationRoute);
 
 // Initialize database and start server
 const PORT = process.env.PORT || 8085;

@@ -132,3 +132,14 @@ CREATE TABLE IF NOT EXISTS reconciliation_matches (
 -- ALTER TABLE ledgers ADD UNIQUE KEY unique_ledger_period (bank_account_id, target_month, target_year);
 -- ALTER TABLE bank_statement_groups ADD UNIQUE KEY unique_statement_period (bank_account_id, target_month, target_year);
 -- ALTER TABLE ledgers DROP COLUMN name;
+
+CREATE TABLE IF NOT EXISTS reconciliation_results (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    invoice_id VARCHAR(255),
+    matching_rate DECIMAL(5, 2) NOT NULL,
+    bank_account_id INT NOT NULL,
+    target_month INT NOT NULL,
+    target_year INT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (bank_account_id) REFERENCES bank_accounts(id) ON DELETE CASCADE
+);

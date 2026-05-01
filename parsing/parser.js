@@ -57,15 +57,12 @@ async function parsePdf(pdfPath) {
 
             const textContent = await page.getTextContent();
 
-<<<<<<< HEAD
 
-=======
 
 
 
             // Store the items for this page in our results array to be returned.
             // This structure will be useful later for Step B (Spatial Match).
->>>>>>> b0b8605 (fix: resolve reconciliation dropdown and ledger missing fields)
             allPagesContent.push({
                 page: pageNum,
                 items: textContent.items
