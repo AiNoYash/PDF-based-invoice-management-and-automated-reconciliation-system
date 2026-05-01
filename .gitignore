@@ -35,3 +35,9 @@ Thumbs.db
 
 # Misc generated files
 a.out
+
+# Uploaded files (user content — never commit)
+uploads/*
+!uploads/.gitkeep
+uploads/**/*
+!uploads/**/.gitkeep
