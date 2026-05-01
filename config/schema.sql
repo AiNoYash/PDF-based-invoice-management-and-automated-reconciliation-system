@@ -130,5 +130,5 @@ CREATE TABLE IF NOT EXISTS reconciliation_matches (
 -- ADD FOREIGN KEY (last_active_business_id) REFERENCES businesses(id) ON DELETE SET NULL;
 
 -- Apply unique constraints to existing tables - safe to re-run, initSchema.js ignores ER_DUP_KEYNAME
--- ALTER TABLE ledgers ADD UNIQUE KEY unique_ledger_period (bank_account_id, target_month, target_year);
--- ALTER TABLE bank_statement_groups ADD UNIQUE KEY unique_statement_period (bank_account_id, target_month, target_year);
+ALTER TABLE ledgers ADD UNIQUE KEY unique_ledger_period (bank_account_id, target_month, target_year);
+ALTER TABLE bank_statement_groups ADD UNIQUE KEY unique_statement_period (bank_account_id, target_month, target_year);
