@@ -29,4 +29,7 @@ const upload = multer({ storage: storage, fileFilter: fileFilter });
 // Protected route for uploads
 router.post('/upload', authMiddleware, upload.single('invoice'), invoiceController.uploadInvoice);
 
+// Protected route for dashboard stats
+router.get('/stats/dashboard', authMiddleware, invoiceController.getDashboardStats);
+
 module.exports = router;

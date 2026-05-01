@@ -1,3 +1,8 @@
+//Initial Parsing & Header Normalization
+//Searching for Synonyms
+//The Date Construction Engine
+//Smart Credit / Debit Detection
+//Database Insertion
 const fs = require('fs');
 const Papa = require('papaparse');
 const db = require('../config/db');
@@ -185,13 +190,11 @@ const uploadStatementGroup = async (req, res) => {
     const bankStatementFileId = fileResult.insertId;
 
     const insertPromises = parsedRecords.map((record) => db.execute(
-      'INSERT INTO bank_statement_records (bank_statement_group_id, bank_statement_file_id, transaction_id, invoice_number, customer_name, index_number, transaction_date, amount, transaction_type, description) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+      'INSERT INTO bank_statement_records (bank_statement_group_id, bank_statement_file_id, transaction_id, index_number, transaction_date, amount, transaction_type, description) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
       [
         bankStatementGroupId,
         bankStatementFileId,
         record.transaction_id,
-        record.invoice_number,
-        record.customer_name,
         record.index_number,
         record.transaction_date,
         record.amount,
@@ -228,6 +231,7 @@ const getStatementGroups = async (req, res) => {
   try {
     const [rows] = await db.execute(
       `SELECT g.id,
+              g.bank_account_id,
               g.name,
               g.target_month AS month,
               g.target_year AS year,
@@ -243,6 +247,7 @@ const getStatementGroups = async (req, res) => {
 
     const groups = rows.map((row) => ({
       id: row.id,
+      bankAccountId: row.bank_account_id,
       name: row.name,
       month: row.month,
       year: row.year,
@@ -288,8 +293,6 @@ const getStatementGroupById = async (req, res) => {
     const [records] = await db.execute(
       `SELECT id,
               transaction_id AS transactionId,
-              invoice_number AS invoiceNumber,
-              customer_name AS customerName,
               is_reconciled AS isReconciled,
               transaction_date AS date,
               amount,
@@ -305,8 +308,6 @@ const getStatementGroupById = async (req, res) => {
     const formattedRecords = records.map((row) => ({
       id: row.id,
       transactionId: row.transactionId,
-      invoiceNumber: row.invoiceNumber,
-      customerName: row.customerName,
       reconciled: row.isReconciled ? 'Yes' : 'No',
       date: row.date ? (() => {
         const d = new Date(row.date);

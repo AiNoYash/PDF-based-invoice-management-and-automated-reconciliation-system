@@ -28,6 +28,25 @@
   --font-body: 'DM Sans', sans-serif;
 }
 
+/* Dark Theme */
+body.dark-theme {
+  --green-primary: #2d7a52;
+  --green-dark: #1a5c3a;
+  --green-medium: #3fa06b;
+  --green-light: #4cbb7f;
+  --green-pale: #1a3d2a;
+  --green-accent: #4cbb7f;
+  --bg-page: #0f172a;
+  --bg-white: #1e293b;
+  --text-primary: #f1f5f9;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+  --border-light: #334155;
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.5);
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -109,6 +128,27 @@
   display: flex;
   align-items: center;
   gap: 10px;
+}
+
+/* Theme Toggle Button */
+.theme-toggle-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  background: var(--bg-page);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-sm);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.theme-toggle-btn:hover {
+  background: var(--green-pale);
+  border-color: var(--green-light);
+  color: var(--green-primary);
 }
 
 .btn-login {

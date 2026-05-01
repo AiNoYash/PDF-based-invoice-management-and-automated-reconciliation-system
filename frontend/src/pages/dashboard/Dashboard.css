@@ -1,17 +1,43 @@
 .dashboard-layout {
   display: flex;
   height: 100vh;
-  background-color: #f9fafb;
-  /* Gray 50 */
+  background-color: var(--bg-secondary);
   font-family: 'Inter', sans-serif;
+}
+
+
+/* CSS Variables for theming */
+:root {
+  --bg-main: #ffffff;
+  --bg-secondary: #f9fafb;
+  --bg-hover: #f3f4f6;
+  --text-main: #111827;
+  --text-secondary: #6b7280;
+  --border-color: #e5e7eb;
+  --accent-color: #059669;
+}
+
+/* Dark theme variables */
+body.dark-theme {
+  --bg-main: #1e293b;
+  --bg-secondary: #0f172a;
+  --bg-hover: #334155;
+  --text-main: #f1f5f9;
+  --text-secondary: #94a3b8;
+  --border-color: #334155;
+  --accent-color: #10b981;
+}
+
+body.dark-theme .dashboard-layout {
+  background-color: var(--bg-secondary);
 }
 
 
 /* Sidebar */
 .sidebar {
   width: 260px;
-  background-color: #ffffff;
-  border-right: 1px solid #e5e7eb;
+  background-color: var(--bg-main);
+  border-right: 1px solid var(--border-color);
   display: flex;
   flex-direction: column;
 }
@@ -23,8 +49,8 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  color: #111827;
-  border-bottom: 1px solid #e5e7eb;
+  color: var(--text-main);
+  border-bottom: 1px solid var(--border-color);
 }
 
 .brand-icon-wrapper {
@@ -63,7 +89,7 @@
   color: #059669;
 }
 
-/* ? Last is Logout btn and 2nd last is Settings button */
+/* Last is Logout btn and 2nd last is Settings button */
 .nav-item:nth-last-child(2){
   margin-top: auto;
 }
@@ -85,7 +111,47 @@
 
 .sidebar-footer {
   padding: 1rem;
-  border-top: 1px solid #e5e7eb;
+  border-top: 1px solid var(--border-color);
+}
+
+/* Theme Toggle Button */
+.theme-toggle-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  margin-bottom: 1rem;
+  background-color: #f3f4f6;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  color: #4b5563;
+  font-weight: 500;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.theme-toggle-btn:hover {
+  background-color: #e5e7eb;
+  color: #111827;
+}
+
+.theme-toggle-btn svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* Dark theme for sidebar */
+body.dark-theme .theme-toggle-btn {
+  background-color: #334155;
+  border-color: #475569;
+  color: #e2e8f0;
+}
+
+body.dark-theme .theme-toggle-btn:hover {
+  background-color: #475569;
+  color: #f8fafc;
 }
 
 .user-profile {
@@ -125,9 +191,9 @@
 }
 
 .topbar {
-  background-color: #ffffff;
+  background-color: var(--bg-main);
   min-height: 64px;
-  border-bottom: 1px solid #e5e7eb;
+  border-bottom: 1px solid var(--border-color);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -136,7 +202,7 @@
 
 .topbar-left h2 {
   font-size: 1.25rem;
-  color: #111827;
+  color: var(--text-main);
   font-weight: 600;
 }
 

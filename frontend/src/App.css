@@ -22,6 +22,69 @@
   
   --stat-orange-text: #d97706; /* For the "Matched" and "Partial Match" text in mockup list */
   --stat-lightgreen-bg: #f0fdf4;
+
+  /* Additional Card and Icon Backgrounds */
+  --card-bg: #ffffff;
+  --sidebar-bg: #ffffff;
+  --sidebar-hover: #f3f4f6;
+  --hover-bg: #f9fafb;
+  
+  --icon-green-bg: #ecfdf5;
+  --icon-green-text: #059669;
+  
+  --icon-blue-bg: #eff6ff;
+  --icon-blue-text: #2563eb;
+  
+  --icon-amber-bg: #fffbeb;
+  --icon-amber-text: #d97706;
+  
+  --icon-rose-bg: #fff1f2;
+  --icon-rose-text: #e11d48;
+  
+  --input-bg: #ffffff;
+}
+
+body.dark-theme {
+  --bg-color: #0f172a;
+  --text-main: #f8fafc;
+  --text-primary: #ffffff;
+  --text-muted: #94a3b8;
+  --text-light: #cbd5e1;
+  --primary: #10b981;
+  --primary-hover: #34d399;
+  --white: #1e293b;
+  --border-color: #334155;
+  
+  --stat-yellow-text: #fcd34d;
+  --stat-yellow-bg: #78350f;
+  
+  --stat-gray-text: #cbd5e1;
+  --stat-gray-bg: #334155;
+  
+  --stat-red-text: #fca5a5;
+  --stat-red-bg: #7f1d1d;
+  
+  --stat-orange-text: #fbbf24;
+  --stat-lightgreen-bg: #064e3b;
+
+  --card-bg: #1e293b;
+  --sidebar-bg: #1e293b;
+  --sidebar-hover: #334155;
+  --hover-bg: #0f172a;
+  
+  --icon-green-bg: #064e3b;
+  --icon-green-text: #34d399;
+  
+  --icon-blue-bg: #1e3a8a;
+  --icon-blue-text: #60a5fa;
+  
+  --icon-amber-bg: #78350f;
+  --icon-amber-text: #fbbf24;
+  
+  --icon-rose-bg: #881337;
+  --icon-rose-text: #fb7185;
+  
+  --input-bg: #0f172a;
 }
 
 

@@ -66,7 +66,7 @@ const useAuthStore = create(
         if (!token) return;
 
         try {
-          const response = await fetch('http://localhost:8085/api/v1/auth/active-business', {
+          const response = await fetch('http://localhost:8085/api/v1/settings/active-business', {
             method: 'PUT',
             headers: {
               'Content-Type': 'application/json',

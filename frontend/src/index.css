@@ -5,6 +5,18 @@
   box-sizing: border-box;
 }
 
+/* Light mode (default) */
+body {
+  background-color: #f9fafb;
+  color: #111827;
+}
+
+/* Dark theme */
+body.dark-theme {
+  background-color: #0f172a;
+  color: #f1f5f9;
+}
+
 /* 2. Remove default margins and padding */
 * {
   margin: 0;

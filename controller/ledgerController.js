@@ -28,6 +28,9 @@ const getLedgers = async (req, res) => {
 
         const formattedLedgers = ledgers.map(ledger => ({
             id: ledger.id,
+            bankAccountId: ledger.bank_account_id,
+            targetMonth: ledger.target_month,
+            targetYear: ledger.target_year,
             bankAccount: [
                 ledger.bank_name,
                 ledger.account_nickname ? `(${ledger.account_nickname})` : '',

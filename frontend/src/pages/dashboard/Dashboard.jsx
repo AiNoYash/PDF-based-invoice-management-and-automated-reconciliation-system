@@ -40,9 +40,9 @@ function Dashboard() {
             <h2>{titles[currentPage]}</h2>
           </div>
 
-          {
-            currentPage === "Dashboard" || currentPage === "Settings" ? null :
-              <div className="topbar-right">
+          <div className="topbar-right" style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+            {
+              currentPage === "Dashboard" || currentPage === "Settings" ? null :
                 <Link className="btn-upload-primary" onClick={() => {
                   setShowCreateModalOverlay(true);
                 }}>
@@ -57,10 +57,8 @@ function Dashboard() {
                           null
                   }
                 </Link>
-              </div>
-          }
-
-
+            }
+          </div>
         </header>
 
         <div className="page-body">

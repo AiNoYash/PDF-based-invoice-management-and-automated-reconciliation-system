@@ -6,6 +6,7 @@ class LedgerModel {
         const [rows] = await db.execute(
             `SELECT
                 l.id,
+                l.bank_account_id,
                 l.target_month,
                 l.target_year,
                 l.created_at,
@@ -17,7 +18,7 @@ class LedgerModel {
             JOIN bank_accounts ba ON l.bank_account_id = ba.id
             LEFT JOIN ledger_files lf ON l.id = lf.ledger_id
             WHERE ba.business_id = ?
-            GROUP BY l.id, l.target_month, l.target_year, l.created_at,
+            GROUP BY l.id, l.bank_account_id, l.target_month, l.target_year, l.created_at,
                      ba.bank_name, ba.account_nickname, ba.account_last_four
             ORDER BY l.created_at DESC`,
             [businessId]
@@ -108,6 +109,9 @@ class LedgerModel {
     static async addRecords(ledgerId, ledgerFileId, records) {
         const insertedIds = [];
         for (const record of records) {
+            // Skip invalid records (like empty continuation pages)
+            if (!record.transaction_date) continue;
+            
             const id = await this.addRecord(ledgerId, ledgerFileId, record);
             insertedIds.push(id);
         }

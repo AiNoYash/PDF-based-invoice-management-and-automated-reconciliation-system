@@ -3,7 +3,7 @@ const db = require('./config/db');
 
 async function test() {
   try {
-    const [rows] = await db.execute('DESCRIBE ledger_records');
+    const [rows] = await db.execute('DESCRIBE bank_statement_records');
     console.log(rows);
     process.exit(0);
   } catch (err) {
