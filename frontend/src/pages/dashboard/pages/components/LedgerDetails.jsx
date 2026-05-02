@@ -220,81 +220,13 @@ export function LedgerDetails() {
                                     <tr key={txn.id}>
                                         <td>{index + 1}</td>
 
-                                        {/* Transaction ID — editable input */}
-                                        <td className="editable-cell">
-                                            <input
-                                                className="editable-input"
-                                                type="text"
-                                                defaultValue={txn.transactionId}
-                                                onBlur={e => handleTransactionUpdate(txn.id, 'transactionId', e.target.value)}
-                                            />
-                                        </td>
-
-                                        {/* Reconciled — editable select */}
-                                        <td className="editable-cell">
-                                            <select
-                                                className="editable-input"
-                                                defaultValue={txn.reconciled}
-                                                onChange={e => handleTransactionUpdate(txn.id, 'reconciled', e.target.value)}
-                                            >
-                                                <option value="Yes">Yes</option>
-                                                <option value="No">No</option>
-                                            </select>
-                                        </td>
-
-                                        {/* Date — editable date picker */}
-                                        <td className="editable-cell">
-                                            <input
-                                                className="editable-input"
-                                                type="date"
-                                                defaultValue={txn.date}
-                                                onBlur={e => handleTransactionUpdate(txn.id, 'date', e.target.value)}
-                                            />
-                                        </td>
-
-                                        {/* Debit — editable number */}
-                                        <td className="editable-cell">
-                                            <input
-                                                className="editable-input"
-                                                type="number"
-                                                placeholder="0.00"
-                                                defaultValue={txn.debit}
-                                                onBlur={e => handleTransactionUpdate(txn.id, 'debit', e.target.value)}
-                                            />
-                                        </td>
-
-                                        {/* Credit — editable number */}
-                                        <td className="editable-cell">
-                                            <input
-                                                className="editable-input"
-                                                type="number"
-                                                placeholder="0.00"
-                                                defaultValue={txn.credit}
-                                                onBlur={e => handleTransactionUpdate(txn.id, 'credit', e.target.value)}
-                                            />
-                                        </td>
-
-                                        {/* Description — editable text */}
-                                        <td className="editable-cell">
-                                            <input
-                                                className="editable-input"
-                                                type="text"
-                                                placeholder="Enter description..."
-                                                defaultValue={txn.description}
-                                                onBlur={e => handleTransactionUpdate(txn.id, 'description', e.target.value)}
-                                            />
-                                        </td>
-
-                                        {/* File Name — editable text */}
-                                        <td className="editable-cell">
-                                            <input
-                                                className="editable-input"
-                                                type="text"
-                                                placeholder="Optional file..."
-                                                defaultValue={txn.fileName || ''}
-                                                onBlur={e => handleTransactionUpdate(txn.id, 'fileName', e.target.value)}
-                                            />
-                                        </td>
+                                        <td>{txn.transactionId || '-'}</td>
+                                        <td>{txn.reconciled}</td>
+                                        <td>{txn.date || '-'}</td>
+                                        <td>{txn.debit || '0.00'}</td>
+                                        <td>{txn.credit || '0.00'}</td>
+                                        <td>{txn.description || '-'}</td>
+                                        <td>{txn.fileName || '-'}</td>
                                     </tr>
                                 ))}
                             </tbody>

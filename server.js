@@ -42,15 +42,16 @@ const PORT = process.env.PORT || 8085;
 const startServer = async () => {
     try {
         await initSchema();
-        console.log("Database initialized successfully.");
-
-        app.listen(PORT, () => {
-            console.log(`Server is running on port ${PORT}`);
-        });
-
+        console.log('Database initialized successfully.');
     } catch (error) {
-        console.error("Failed to start server:", error);
+        // DB unavailable (e.g. remote server unreachable) — log but keep going.
+        // Individual API routes will return 503 until the DB is reachable.
+        console.error('DB init warning (server will still start):', error.message);
     }
+
+    app.listen(PORT, () => {
+        console.log(`Server is running on port ${PORT}`);
+    });
 };
 
 startServer();

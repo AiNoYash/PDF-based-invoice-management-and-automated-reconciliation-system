@@ -3,6 +3,7 @@ CREATE TABLE IF NOT EXISTS users (
     username VARCHAR(255) NOT NULL,
     email VARCHAR(255) UNIQUE NOT NULL,
     password_hash VARCHAR(255) NOT NULL,
+    last_active_business_id INT DEFAULT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -93,6 +94,7 @@ CREATE TABLE IF NOT EXISTS bank_statement_records (
     bank_statement_group_id INT NOT NULL,
     bank_statement_file_id INT DEFAULT NULL,
     transaction_id VARCHAR(255),
+    invoice_number VARCHAR(100) DEFAULT NULL,
     index_number INT,
     is_reconciled BOOLEAN DEFAULT FALSE,
     transaction_date DATE NOT NULL,
@@ -103,6 +105,10 @@ CREATE TABLE IF NOT EXISTS bank_statement_records (
     FOREIGN KEY (bank_statement_group_id) REFERENCES bank_statement_groups (id) ON DELETE CASCADE,
     FOREIGN KEY (bank_statement_file_id) REFERENCES bank_statement_files (id) ON DELETE SET NULL
 );
+
+-- Migration guard: add invoice_number if this DB was created before this change
+ALTER TABLE bank_statement_records
+    ADD COLUMN invoice_number VARCHAR(100) DEFAULT NULL AFTER transaction_id;
 
 CREATE TABLE IF NOT EXISTS reconciliation_groups (
     id INT AUTO_INCREMENT PRIMARY KEY,

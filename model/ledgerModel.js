@@ -13,10 +13,10 @@ class LedgerModel {
                 ba.bank_name,
                 ba.account_nickname,
                 ba.account_last_four,
-                COUNT(lf.id) AS entries
+                COUNT(lr.id) AS entries
             FROM ledgers l
             JOIN bank_accounts ba ON l.bank_account_id = ba.id
-            LEFT JOIN ledger_files lf ON l.id = lf.ledger_id
+            LEFT JOIN ledger_records lr ON l.id = lr.ledger_id
             WHERE ba.business_id = ?
             GROUP BY l.id, l.bank_account_id, l.target_month, l.target_year, l.created_at,
                      ba.bank_name, ba.account_nickname, ba.account_last_four
@@ -46,10 +46,10 @@ class LedgerModel {
                 ba.bank_name,
                 ba.account_nickname,
                 ba.account_last_four,
-                COUNT(lf.id) AS entries
+                COUNT(lr.id) AS entries
             FROM ledgers l
             JOIN bank_accounts ba ON l.bank_account_id = ba.id
-            LEFT JOIN ledger_files lf ON l.id = lf.ledger_id
+            LEFT JOIN ledger_records lr ON l.id = lr.ledger_id
             WHERE l.id = ?
             GROUP BY l.id`,
             [id]

@@ -146,14 +146,7 @@ export function StatementGroupDetails() {
                                                 {txn.customerName || '—'}
                                             </td>
                                             <td className="reconciled-cell">
-                                                <select
-                                                    className="reconciliation-toggle"
-                                                    value={txn.reconciled}
-                                                    onChange={(e) => handleReconciliationToggle(txn.id, txn.reconciled)}
-                                                >
-                                                    <option value="Yes">Yes</option>
-                                                    <option value="No">No</option>
-                                                </select>
+                                                {txn.reconciled}
                                             </td>
                                             <td>
                                                 {formatDate(txn.date)}

@@ -190,11 +190,12 @@ const uploadStatementGroup = async (req, res) => {
     const bankStatementFileId = fileResult.insertId;
 
     const insertPromises = parsedRecords.map((record) => db.execute(
-      'INSERT INTO bank_statement_records (bank_statement_group_id, bank_statement_file_id, transaction_id, index_number, transaction_date, amount, transaction_type, description) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+      'INSERT INTO bank_statement_records (bank_statement_group_id, bank_statement_file_id, transaction_id, invoice_number, index_number, transaction_date, amount, transaction_type, description) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
       [
         bankStatementGroupId,
         bankStatementFileId,
         record.transaction_id,
+        record.invoice_number || null,
         record.index_number,
         record.transaction_date,
         record.amount,

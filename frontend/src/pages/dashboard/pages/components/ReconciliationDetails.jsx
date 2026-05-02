@@ -11,6 +11,21 @@ const formatCurrency = (val) => {
     }).format(val);
 };
 
+const formatDate = (v) => {
+    if (!v) return null;
+    const d = new Date(v);
+    if (isNaN(d)) return null;
+    return d.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
+};
+
+/** Calculate |invoice_date − bank_date| in whole days */
+const dateDiff = (d1, d2) => {
+    if (!d1 || !d2) return null;
+    const a = new Date(d1), b = new Date(d2);
+    if (isNaN(a) || isNaN(b)) return null;
+    return Math.round(Math.abs(a - b) / 86400000);
+};
+
 const getStatus = (r) => {
     if (r === 100) return { label: '✓ Matched',   cls: 'status-matched'   };
     if (r === 0)   return { label: '✗ Unmatched', cls: 'status-unmatched' };
@@ -20,16 +35,17 @@ const getStatus = (r) => {
 /* ─── column definitions ─── */
 const COLS = [
     { key: 'index',          label: '#',              defaultW: 55  },
-    { key: 'invoice_id',     label: 'Invoice ID',     defaultW: 160 },
-    { key: 'description',    label: 'Description',    defaultW: 260 },
-    { key: 'type',           label: 'Type',           defaultW: 110 },
-    { key: 'invoice_amount', label: 'Invoice Amount', defaultW: 155 },
-    { key: 'bank_txn_id',    label: 'Bank TXN ID',    defaultW: 150 },
-    { key: 'bank_amount',    label: 'Bank Amount',    defaultW: 155 },
-    { key: 'match_pct',      label: 'Match %',        defaultW: 165 },
-    { key: 'status',         label: 'Status',         defaultW: 140 },
+    { key: 'invoice_id',     label: 'Invoice ID',     defaultW: 155 },
+    { key: 'description',    label: 'Description',    defaultW: 250 },
+    { key: 'type',           label: 'Type',           defaultW: 105 },
+    { key: 'invoice_amount', label: 'Invoice Amount', defaultW: 150 },
+    { key: 'bank_txn_id',    label: 'Bank TXN ID',    defaultW: 145 },
+    { key: 'bank_amount',    label: 'Bank Amount',    defaultW: 150 },
+    { key: 'date_diff',      label: 'Date Gap',       defaultW: 110 },
+    { key: 'match_pct',      label: 'Match %',        defaultW: 160 },
+    { key: 'status',         label: 'Status',         defaultW: 135 },
 ];
-const MIN_W = 60;
+const MIN_W = 55;
 
 export function ReconciliationDetails() {
     const { id: reconId } = useParams();
@@ -53,10 +69,13 @@ export function ReconciliationDetails() {
                     { headers: { Authorization: `Bearer ${token}` } }
                 );
                 const data = await res.json();
-                if (!res.ok) throw new Error(data.message);
+                if (!res.ok) throw new Error(data.message || 'Failed');
                 setResults(data.results || []);
-            } catch (e) { setError('Failed to load results.'); }
-            finally     { setLoading(false); }
+            } catch (e) {
+                setError('Failed to load reconciliation results.');
+            } finally {
+                setLoading(false);
+            }
         })();
     }, [reconId, token]);
 
@@ -91,11 +110,16 @@ export function ReconciliationDetails() {
         };
     }, []);
 
-    /* ── filter / search ── */
+    /* ── derived counts ── */
     const matchedC   = results.filter(r => r.result === 100).length;
     const partialC   = results.filter(r => r.result > 0 && r.result < 100).length;
     const unmatchedC = results.filter(r => r.result === 0).length;
+    const total      = results.length;
 
+    /* ── match rate % ── */
+    const matchRate = total > 0 ? Math.round((matchedC / total) * 100) : 0;
+
+    /* ── filter + search ── */
     const visible = results
         .filter(r => {
             if (filter === 'matched')   return r.result === 100;
@@ -113,24 +137,49 @@ export function ReconciliationDetails() {
 
     const totalW = widths.reduce((s, w) => s + w, 0);
 
-    /* ── td cell style — same width as its th ── */
     const cell = (i) => ({
-        width:    widths[i],
-        minWidth: widths[i],
-        maxWidth: widths[i],
-        overflow: 'hidden',
+        width:        widths[i],
+        minWidth:     widths[i],
+        maxWidth:     widths[i],
+        overflow:     'hidden',
         textOverflow: 'ellipsis',
-        whiteSpace: 'nowrap',
+        whiteSpace:   'nowrap',
     });
 
     return (
         <div className="recon-page">
 
-            {/* ── top bar ── */}
+            {/* ── Summary strip ── */}
+            {!loading && !error && total > 0 && (
+                <div className="recon-summary-strip">
+                    <div className="rss-card rss-total">
+                        <span className="rss-num">{total}</span>
+                        <span className="rss-lbl">Total Records</span>
+                    </div>
+                    <div className="rss-card rss-matched">
+                        <span className="rss-num">{matchedC}</span>
+                        <span className="rss-lbl">Matched</span>
+                    </div>
+                    <div className="rss-card rss-partial">
+                        <span className="rss-num">{partialC}</span>
+                        <span className="rss-lbl">Partial</span>
+                    </div>
+                    <div className="rss-card rss-unmatched">
+                        <span className="rss-num">{unmatchedC}</span>
+                        <span className="rss-lbl">Unmatched</span>
+                    </div>
+                    <div className="rss-card rss-rate">
+                        <span className="rss-num">{matchRate}%</span>
+                        <span className="rss-lbl">Match Rate</span>
+                    </div>
+                </div>
+            )}
+
+            {/* ── top bar: tabs + search ── */}
             <div className="recon-bar">
                 <div className="recon-tabs">
                     {[
-                        { k: 'all',       label: 'All',       n: results.length                },
+                        { k: 'all',       label: 'All',       n: total,      color: '#6b7280' },
                         { k: 'matched',   label: 'Matched',   n: matchedC,   color: '#22c55e' },
                         { k: 'partial',   label: 'Partial',   n: partialC,   color: '#f59e0b' },
                         { k: 'unmatched', label: 'Unmatched', n: unmatchedC, color: '#ef4444' },
@@ -141,17 +190,26 @@ export function ReconciliationDetails() {
                             onClick={() => setFilter(t.k)}
                         >
                             {t.label}
-                            <span className="rbadge" style={{ background: t.color || '#6b7280' }}>{t.n}</span>
+                            <span className="rbadge" style={{ background: t.color }}>{t.n}</span>
                         </button>
                     ))}
                 </div>
                 <div className="rsearch">
                     <span>🔍</span>
                     <input
-                        placeholder="Search invoice, description..."
+                        placeholder="Search invoice, description…"
                         value={search}
                         onChange={e => setSearch(e.target.value)}
                     />
+                    {search && (
+                        <button
+                            onClick={() => setSearch('')}
+                            style={{ border: 'none', background: 'none', cursor: 'pointer',
+                                     color: '#94a3b8', fontSize: '16px', lineHeight: 1 }}
+                        >
+                            ×
+                        </button>
+                    )}
                 </div>
             </div>
 
@@ -160,7 +218,6 @@ export function ReconciliationDetails() {
 
             {!loading && !error && (
                 <>
-                    {/* ── table wrapper ── */}
                     <div className="recon-scroll">
                         <table
                             className="recon-tbl"
@@ -195,14 +252,23 @@ export function ReconciliationDetails() {
                             <tbody>
                                 {visible.length === 0 ? (
                                     <tr>
-                                        <td colSpan={COLS.length} style={{ textAlign: 'center', padding: '40px', color: '#94a3b8' }}>
+                                        <td colSpan={COLS.length}
+                                            style={{ textAlign: 'center', padding: '40px', color: '#94a3b8' }}>
                                             No records match your filter or search.
                                         </td>
                                     </tr>
                                 ) : visible.map((row, idx) => {
                                     const st       = getStatus(row.result);
                                     const isCredit = (row.transaction_type || '').toLowerCase() === 'credit';
-                                    const barColor = row.result === 100 ? '#22c55e' : row.result === 0 ? '#ef4444' : '#f59e0b';
+                                    const barColor = row.result === 100 ? '#22c55e'
+                                                   : row.result === 0   ? '#ef4444'
+                                                   : '#f59e0b';
+                                    const diff     = dateDiff(row.invoice_date, row.bank_date);
+                                    const invDateStr  = formatDate(row.invoice_date);
+                                    const bankDateStr = formatDate(row.bank_date);
+                                    const diffTitle   = invDateStr && bankDateStr
+                                        ? `Invoice: ${invDateStr}  |  Bank: ${bankDateStr}`
+                                        : undefined;
 
                                     return (
                                         <tr key={row.id} className={`rrow ${st.cls}`}>
@@ -241,18 +307,38 @@ export function ReconciliationDetails() {
                                                 {formatCurrency(row.bank_amount)}
                                             </td>
 
+                                            {/* Date Gap */}
+                                            <td style={{ ...cell(7), textAlign: 'center' }} title={diffTitle}>
+                                                {diff === null ? (
+                                                    <span style={{ color: '#cbd5e1' }}>—</span>
+                                                ) : diff === 0 ? (
+                                                    <span className="diff-zero">Same day</span>
+                                                ) : (
+                                                    <span
+                                                        className={diff > 20 ? 'diff-high' : diff > 7 ? 'diff-mid' : 'diff-low'}
+                                                    >
+                                                        {diff}d
+                                                    </span>
+                                                )}
+                                            </td>
+
                                             {/* Match % */}
-                                            <td style={cell(7)}>
+                                            <td style={cell(8)}>
                                                 <div className="mbar-wrap">
                                                     <div className="mbar-track">
-                                                        <div className="mbar-fill" style={{ width: `${row.result}%`, background: barColor }} />
+                                                        <div
+                                                            className="mbar-fill"
+                                                            style={{ width: `${row.result}%`, background: barColor }}
+                                                        />
                                                     </div>
-                                                    <span className="mbar-pct" style={{ color: barColor }}>{row.result}%</span>
+                                                    <span className="mbar-pct" style={{ color: barColor }}>
+                                                        {row.result}%
+                                                    </span>
                                                 </div>
                                             </td>
 
                                             {/* Status */}
-                                            <td style={cell(8)}>
+                                            <td style={cell(9)}>
                                                 <span className={`sbadge ${st.cls}`}>{st.label}</span>
                                             </td>
                                         </tr>

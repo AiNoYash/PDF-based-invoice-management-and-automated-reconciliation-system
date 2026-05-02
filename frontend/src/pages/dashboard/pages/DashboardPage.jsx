@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import useAuthStore from '../../../store/useAuthStore';
 import './DashboardPage.css';
 
 /* SVG Icons */
@@ -96,18 +97,20 @@ export function DashboardPage() {
   const [stats, setStats] = useState(defaultStats);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const token = useAuthStore(state => state.token);
+  const user = useAuthStore(state => state.user);
 
   useEffect(() => {
     const fetchStats = async () => {
-      try {
-        const token = localStorage.getItem('token');
-        if (!token) {
-          setError('Not authenticated');
-          setLoading(false);
-          return;
-        }
+      if (!token) {
+        setError('Not authenticated');
+        setLoading(false);
+        return;
+      }
 
-        const response = await fetch('/api/v1/stats/dashboard-stats', {
+      try {
+        const businessParam = user?.lastActiveBusinessId ? `?businessId=${user.lastActiveBusinessId}` : '';
+        const response = await fetch(`http://localhost:8085/api/v1/stats/dashboard-stats${businessParam}`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -120,7 +123,6 @@ export function DashboardPage() {
         }
 
         const data = await response.json();
-        // Ensure previousMonthStats exists
         if (!data.previousMonthStats) {
           data.previousMonthStats = {
             month: "N/A",
@@ -135,14 +137,13 @@ export function DashboardPage() {
       } catch (err) {
         console.error('Error fetching dashboard stats:', err);
         setError(err.message);
-        // Keep using default stats on error
       } finally {
         setLoading(false);
       }
     };
 
     fetchStats();
-  }, []);
+  }, [token, user?.lastActiveBusinessId]);
 
   const m = stats.latestMonthStats;
   const pm = stats.previousMonthStats;

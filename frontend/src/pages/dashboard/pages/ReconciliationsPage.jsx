@@ -118,7 +118,7 @@ export function ReconciliationsPage() {
                                 <tr
                                     key={r.id}
                                     style={{ cursor: 'pointer' }}
-                                    onClick={() => navigate(r.id.toString())}
+                                    onClick={() => navigate(`/dashboard/reconciliations/${r.id}`)}
                                 >
                                     <td style={{ color: '#94a3b8', fontSize: '13px', textAlign: 'center' }}>
                                         {idx + 1}

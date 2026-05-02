@@ -1,9 +1,9 @@
 const express = require('express');
 const router = express.Router();
 
-// TODO: Implement dashboard stats endpoint
-router.get('/', (req, res) => {
-    res.status(200).json({ message: 'Stats endpoint – coming soon.' });
-});
+const verifyToken = require('../middleware/authMiddleware');
+const { getDashboardStats } = require('../controller/statsController');
+
+router.get('/dashboard-stats', verifyToken, getDashboardStats);
 
 module.exports = router;
